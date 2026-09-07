@@ -6,8 +6,15 @@ param(
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
 
-function Get-ReleaseUrl([string]$Repository, [string]$Tag, [string]$Asset) {
-  return "https://github.com/$Repository/releases/download/$Tag/$Asset"
+function Download-ReleaseAsset([string]$Repository, [long]$AssetId, [string]$AssetName, [string]$Destination) {
+  $apiUrl = "https://api.github.com/repos/$Repository/releases/assets/$AssetId"
+  $headers = @{
+    Accept = "application/octet-stream"
+    "X-GitHub-Api-Version" = "2022-11-28"
+    "User-Agent" = "SOL-Full-Assembler"
+  }
+  Write-Host "Downloading $AssetName from $Repository asset $AssetId"
+  Invoke-WebRequest -Uri $apiUrl -OutFile $Destination -Headers $headers -MaximumRedirection 10
 }
 
 function Assert-Sha256([string]$Path, [string]$Expected) {
@@ -43,9 +50,7 @@ New-Item -ItemType Directory -Force -Path $stageRoot, $downloadRoot, (Join-Path 
 
 foreach ($component in $manifest.components) {
   $assetPath = Join-Path $downloadRoot ([string]$component.asset)
-  $url = Get-ReleaseUrl $component.repository $component.releaseTag $component.asset
-  Write-Host "Downloading $($component.name): $url"
-  Invoke-WebRequest -Uri $url -OutFile $assetPath -UseBasicParsing
+  Download-ReleaseAsset $component.repository ([long]$component.assetId) $component.asset $assetPath
   Assert-Sha256 $assetPath $component.sha256
 
   if ($component.kind -eq "core") {
