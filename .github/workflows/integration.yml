@@ -1,0 +1,40 @@
+name: SOL-Full integration
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  assemble:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Assemble pinned SOL-Full bundle
+        shell: pwsh
+        run: ./scripts/assemble-full.ps1
+
+      - name: Inspect bundle
+        shell: pwsh
+        run: |
+          $manifest = Get-Content -Raw manifest/sol-full.json | ConvertFrom-Json
+          $bundle = "dist/SOL-Full-Windows-$($manifest.bundle.version).zip"
+          if (-not (Test-Path $bundle)) { throw "Bundle not created: $bundle" }
+          if (-not (Test-Path dist/SHA256SUMS.txt)) { throw "SHA256SUMS.txt was not created" }
+          Get-Item $bundle | Format-List Name,Length
+          Get-Content dist/SHA256SUMS.txt
+
+      - name: Upload integration artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SOL-Full-Windows
+          path: |
+            dist/SOL-Full-Windows-*.zip
+            dist/SHA256SUMS.txt
+          if-no-files-found: error
