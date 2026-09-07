@@ -19,10 +19,11 @@ function Assert-Sha256([string]$Path, [string]$Expected) {
 
 function Assert-SolPlugin([string]$Path) {
   Add-Type -AssemblyName System.IO.Compression.FileSystem
-  $zip = [System.IO.Compression.ZipFile]::OpenRead((Resolve-Path $Path))
+  $resolved = (Resolve-Path $Path).Path
+  $zip = [System.IO.Compression.ZipFile]::OpenRead($resolved)
   try {
-    $manifest = $zip.Entries | Where-Object { $_.FullName -eq "sol-plugin.json" } | Select-Object -First 1
-    if (-not $manifest) { throw "Plugin package $Path does not contain sol-plugin.json at its root" }
+    $pluginManifest = $zip.Entries | Where-Object { $_.FullName -eq "sol-plugin.json" } | Select-Object -First 1
+    if (-not $pluginManifest) { throw "Plugin package $Path does not contain sol-plugin.json at its root" }
   }
   finally {
     $zip.Dispose()
@@ -48,9 +49,13 @@ foreach ($component in $manifest.components) {
   Assert-Sha256 $assetPath $component.sha256
 
   if ($component.kind -eq "core") {
+    # SOL-Windows.zip already contains a top-level SOL/ directory.
+    Expand-Archive -Path $assetPath -DestinationPath $stageRoot -Force
     $coreDestination = Join-Path $stageRoot ([string]$component.destination)
-    New-Item -ItemType Directory -Force -Path $coreDestination | Out-Null
-    Expand-Archive -Path $assetPath -DestinationPath $coreDestination -Force
+    $launcher = Join-Path $coreDestination "SOL.exe"
+    if (-not (Test-Path $launcher)) {
+      throw "SOL Core archive did not produce expected launcher: $launcher"
+    }
   }
   elseif ($component.kind -eq "plugin") {
     Assert-SolPlugin $assetPath
