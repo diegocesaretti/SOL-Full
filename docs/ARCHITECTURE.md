@@ -40,7 +40,7 @@ Plugins are kept as SOL-native packages instead of being unpacked into the core.
 - source commit;
 - SHA-256 digest.
 
-The assembler downloads the exact public release asset id and refuses to continue when its SHA-256 does not match the pinned digest. Plugin packages are additionally checked for a root `sol-plugin.json` entry. SOL Core is expanded only if the archive produces `SOL/SOL.exe`.
+The assembler downloads the exact public release asset id and refuses to continue when its SHA-256 does not match the pinned digest. Plugin packages are additionally checked with the bundled Core's actual ZIP reader and manifest validator, including id/version, entry point, schema requirements and advertised registration APIs. SOL Core must supply `SOL/SOL.exe` and its portable Node runtime. A failure prevents bundle creation and release publication. These checks do not launch plugins or use credentials, microphones or household devices.
 
 This means a mutable rolling tag such as `sol-plugin-latest` cannot silently change the contents of an existing SOL-Full version: changing the asset requires updating the pinned asset id and digest in this repository.
 
