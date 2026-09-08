@@ -4,12 +4,12 @@ SOL-Full es la distribución Windows probada de **SOL Core + plugins oficiales d
 
 Este repositorio no duplica los árboles fuente de cada proyecto. En cambio, fija artefactos de release conocidos, verifica sus SHA-256, los organiza en un único bundle y ejecuta CI de integración.
 
-## Incluido en `0.13.0-preview.4`
+## Incluido en `0.13.0-preview.5`
 
 | Componente | Versión / tag | Artefacto |
 | --- | --- | --- |
 | SOL Core | `main@24ac1fe` / `sol-windows-latest` | `SOL-Windows.zip` |
-| Nexo · WhatsApp | `0.9.1` / `sol-plugin-latest` | `Nexo.solplugin` |
+| Nexo · WhatsApp | `0.9.2` / `sol-plugin-latest` | `Nexo.solplugin` |
 | Home Assistant | `0.2.0` / `home-assistant-plugin-latest` | `HomeAssistant.solplugin` |
 | Codex Audio Remote | `1.3.0` / `sol-plugin-latest` | `CodexAudioRemote.solplugin` |
 
@@ -19,14 +19,14 @@ La combinación exacta de repositorio, release, asset id, commit fuente y SHA-25
 
 Home Assistant y Codex Audio Remote comparten el contrato de **Personas canónicas de SOL**. Una Persona representa al humano; no equivale a una cuenta/miembro con acceso y por sí sola no otorga permisos. Home Assistant puede resolver `person.*` a Personas de SOL y Audio Remote valida sus bindings de hablante contra esas Personas antes de persistirlos.
 
-Nexo 0.9.1 queda alineado con la generación actual de SOL: usa `gpt-5.6-sol` con reasoning `low` y verbosity `low` por defecto para WhatsApp, mantiene el worker desacoplado del modelo global, limpia sus proyecciones de inputs al eliminar cuentas y conserva la persistencia/outbox endurecida de las revisiones anteriores.
+Nexo 0.9.2 mantiene `gpt-5.6-sol` con reasoning `low` y verbosity `low` por defecto para WhatsApp, el worker desacoplado del modelo global, limpieza de proyecciones al eliminar cuentas y la persistencia/outbox endurecida de las revisiones anteriores. Esta revisión corrige además el empaquetado `.solplugin`: las dependencias de producción se podan sólo de metadata no necesaria en runtime y el ZIP se genera sin entradas de directorio redundantes. El paquete resultante fue validado con **1675 entradas**, por debajo del máximo de 2000 que aplica SOL, y con smoke tests de imports runtime.
 
 Audio Remote 1.3.0 requiere `identity.read`; por eso el bundle fija un SOL Core construido desde el merge que incorpora ese contrato. El assembler inspecciona las capacidades del **Core realmente empaquetado** y aborta si cualquier `requires` de un plugin no está disponible en ese host.
 
 ## Bundle generado
 
 ```text
-SOL-Full-Windows-0.13.0-preview.4.zip
+SOL-Full-Windows-0.13.0-preview.5.zip
 ├─ SOL/
 ├─ plugins/
 │  ├─ Nexo.solplugin
@@ -50,11 +50,11 @@ Requisitos: Windows PowerShell 7+ y acceso de red a GitHub.
 Salida:
 
 ```text
-dist/SOL-Full-Windows-0.13.0-preview.4.zip
+dist/SOL-Full-Windows-0.13.0-preview.5.zip
 dist/SHA256SUMS.txt
 ```
 
-El build aborta si un asset descargado no coincide con el SHA-256 fijado, si un `.solplugin` no contiene `sol-plugin.json` en su raíz, si SOL Core no produce `SOL/SOL.exe`, **o si un plugin requiere una capacidad que el SOL Core empaquetado no ofrece**.
+El build aborta si un asset descargado no coincide con el SHA-256 fijado, si un `.solplugin` no contiene exactamente un `sol-plugin.json` en su raíz, si supera los **2000 ZIP entries** o los **128 MiB descomprimidos** permitidos por SOL, si SOL Core no produce `SOL/SOL.exe`, o si un plugin requiere una capacidad que el SOL Core empaquetado no ofrece.
 
 ## Instalación
 
@@ -66,7 +66,7 @@ El build aborta si un asset descargado no coincide con el SHA-256 fijado, si un 
 
 ## CI y releases
 
-Los pull requests ejecutan `.github/workflows/integration.yml`: descarga exactamente los assets públicos pinneados, verifica hashes, verifica compatibilidad host/plugin y genera el bundle completo en `windows-latest`.
+Los pull requests ejecutan `.github/workflows/integration.yml`: descarga exactamente los assets públicos pinneados, verifica hashes, límites ZIP, compatibilidad host/plugin y genera el bundle completo en `windows-latest`.
 
 Los tags `sol-full-v*` ejecutan `.github/workflows/release.yml` y publican el ZIP ensamblado junto con `SHA256SUMS.txt`.
 
