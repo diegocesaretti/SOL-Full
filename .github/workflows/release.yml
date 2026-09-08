@@ -9,28 +9,26 @@ on:
 permissions:
   contents: write
 
+env:
+  SOL_FULL_UPSTREAM_TOKEN: ${{ secrets.SOL_FULL_UPSTREAM_TOKEN }}
+
 jobs:
   release:
     runs-on: windows-latest
     steps:
       - name: Checkout SOL-Full
         uses: actions/checkout@v4
-
-      - name: Setup Node.js 24
-        uses: actions/setup-node@v4
         with:
-          node-version: 24
+          persist-credentials: false
 
-      - name: Setup .NET 8
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
-
-      - name: Build pinned upstream components
+      - name: Verify private upstream access is configured
         shell: pwsh
-        run: ./scripts/build-components.ps1
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:SOL_FULL_UPSTREAM_TOKEN)) {
+            throw 'Missing Actions secret SOL_FULL_UPSTREAM_TOKEN. It needs read-only Contents access to diegocesaretti/SOL and diegocesaretti/Whatsapp-Codex-Nexo.'
+          }
 
-      - name: Assemble SOL-Full bundle
+      - name: Assemble exact pinned release bundle
         shell: pwsh
         run: ./scripts/assemble-full.ps1
 
