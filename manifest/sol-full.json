@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "bundle": {
     "name": "SOL-Full",
-    "version": "0.13.0-preview.1",
+    "version": "0.13.0-preview.2",
     "platform": "windows-x64",
     "strategy": "pinned-release-artifacts"
   },
@@ -41,22 +41,22 @@
       "repository": "diegocesaretti/SOL",
       "releaseTag": "home-assistant-plugin-latest",
       "asset": "HomeAssistant.solplugin",
-      "assetId": 549501633,
-      "sourceCommit": "6bbddcf8fc95c3c8b9a7959fc9f84ac97449a2d8",
-      "sha256": "e7ce9e1faa95d6052b692df69acba12bdaf6de926c67126415c739dc5ae8ec8d",
+      "assetId": 549781415,
+      "sourceCommit": "24ac1fe1e06d6759ae7f0d144f9692c4505df6d7",
+      "sha256": "e01bc4e7a6e63e399ba83d96e9768bb4ed86d8874f78baf38ea486cc138e68b0",
       "destination": "plugins"
     },
     {
       "id": "codex-audio-remote",
       "name": "Codex Audio Remote",
       "kind": "plugin",
-      "version": "1.1.0",
+      "version": "1.3.0",
       "repository": "diegocesaretti/Codex-audio-remote",
       "releaseTag": "sol-plugin-latest",
       "asset": "CodexAudioRemote.solplugin",
-      "assetId": 549492459,
-      "sourceCommit": "e162e36f79980603f2c2421a36daee6b13c0e344",
-      "sha256": "d8cb1428eabc2e5dfa469d3e3b6ce0988e9211d945839c3d7b111ae3acd2b2e6",
+      "assetId": 549782470,
+      "sourceCommit": "27301251d3542e5997fe29367437320b4da1c15f",
+      "sha256": "a1c8e2e9d27fae900acdfb1eaffb12e9c4bc737d9849b0cb494434af63859c5a",
       "destination": "plugins"
     }
   ]
