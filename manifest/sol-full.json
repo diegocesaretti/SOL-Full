@@ -41,9 +41,9 @@
       "repository": "diegocesaretti/SOL",
       "releaseTag": "home-assistant-plugin-latest",
       "asset": "HomeAssistant.solplugin",
-      "assetId": 551171930,
-      "sourceCommit": "b73728249bac98cebfdbe5e2c0bf74ed2fe4a756",
-      "sha256": "58c7d06b318b3d46ac74357d0bf3652774e3c7d14244200b689a45eea4584cb5",
+      "assetId": 551358313,
+      "sourceCommit": "5faeaf93a145e10547c9db1067dfb08386783e08",
+      "sha256": "b4b5f32e62fd709958e456bb2ec4fc0dd9c71e1504dbf75ef58369ffc533340c",
       "destination": "plugins"
     },
     {
