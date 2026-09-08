@@ -1,11 +1,37 @@
 param(
   [string]$ManifestPath = "manifest/sol-full.json",
-  [string]$InputDirectory = "dist/components",
   [string]$OutputDirectory = "dist"
 )
 
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
+
+function Download-ReleaseAsset([object]$Component, [string]$Destination) {
+  if ($Component.requiresAuth -and [string]::IsNullOrWhiteSpace($env:SOL_FULL_UPSTREAM_TOKEN)) {
+    throw "SOL_FULL_UPSTREAM_TOKEN is required to read private upstream release $($Component.repository)/$($Component.releaseTag)"
+  }
+
+  $apiUrl = "https://api.github.com/repos/$($Component.repository)/releases/assets/$($Component.assetId)"
+  $headers = @{
+    Accept = "application/octet-stream"
+    "X-GitHub-Api-Version" = "2022-11-28"
+    "User-Agent" = "SOL-Full-Assembler"
+  }
+  if ($Component.requiresAuth) {
+    $headers.Authorization = "Bearer $env:SOL_FULL_UPSTREAM_TOKEN"
+  }
+
+  Write-Host "Downloading $($Component.asset) from $($Component.repository) release $($Component.releaseTag)"
+  Invoke-WebRequest -Uri $apiUrl -OutFile $Destination -Headers $headers -MaximumRedirection 10
+}
+
+function Assert-Sha256([string]$Path, [string]$Expected) {
+  $actual = (Get-FileHash -Algorithm SHA256 -Path $Path).Hash.ToLowerInvariant()
+  if ($actual -ne $Expected.ToLowerInvariant()) {
+    throw "SHA256 mismatch for $Path. Expected $Expected, got $actual"
+  }
+  return $actual
+}
 
 function Assert-SolPlugin([string]$Path) {
   Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -23,23 +49,23 @@ function Assert-SolPlugin([string]$Path) {
 $manifest = Get-Content -Raw -Path $ManifestPath | ConvertFrom-Json
 $version = [string]$manifest.bundle.version
 $repoRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
-$inputRoot = Join-Path $repoRoot $InputDirectory
 $outRoot = Join-Path $repoRoot $OutputDirectory
 $workRoot = Join-Path $outRoot ".work"
 $stageRoot = Join-Path $workRoot "SOL-Full-$version"
+$downloadRoot = Join-Path $workRoot "downloads"
 
 Remove-Item -Recurse -Force $workRoot -ErrorAction SilentlyContinue
-New-Item -ItemType Directory -Force -Path $stageRoot, (Join-Path $stageRoot "plugins"), (Join-Path $stageRoot "manifest") | Out-Null
+New-Item -ItemType Directory -Force -Path $stageRoot, $downloadRoot, (Join-Path $stageRoot "plugins"), (Join-Path $stageRoot "manifest") | Out-Null
 
 $componentHashes = @()
 foreach ($component in $manifest.components) {
-  $assetPath = Join-Path $inputRoot ([string]$component.asset)
-  if (-not (Test-Path $assetPath)) { throw "Missing built component: $assetPath" }
-  $assetHash = (Get-FileHash -Algorithm SHA256 -Path $assetPath).Hash.ToLowerInvariant()
-  $componentHashes += "$assetHash  components/$($component.asset)"
+  $assetPath = Join-Path $downloadRoot ([string]$component.asset)
+  Download-ReleaseAsset $component $assetPath
+  $assetHash = Assert-Sha256 $assetPath $component.sha256
+  $componentHashes += "$assetHash  upstream/$($component.asset)"
 
   if ($component.kind -eq "core") {
-    # SOL-Windows.zip contains a top-level SOL/ directory.
+    # SOL-Windows.zip already contains a top-level SOL/ directory.
     Expand-Archive -Path $assetPath -DestinationPath $stageRoot -Force
     $coreDestination = Join-Path $stageRoot ([string]$component.destination)
     $launcher = Join-Path $coreDestination "SOL.exe"
@@ -76,7 +102,7 @@ Instalacion:
 3. En Services/Plugins instala los archivos .solplugin de la carpeta plugins.
 4. Configura credenciales y permisos desde SOL. No se incluyen secretos en este bundle.
 
-La combinacion exacta de repositorios y commits fuente esta en manifest\sol-full.json.
+La combinacion exacta de repositorios, releases, commits y SHA-256 esta en manifest\sol-full.json.
 "@
 Set-Content -Path (Join-Path $stageRoot "INSTALL.txt") -Value $installText -Encoding UTF8
 
