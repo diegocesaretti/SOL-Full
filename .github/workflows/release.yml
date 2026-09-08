@@ -9,9 +9,6 @@ on:
 permissions:
   contents: write
 
-env:
-  SOL_FULL_UPSTREAM_TOKEN: ${{ secrets.SOL_FULL_UPSTREAM_TOKEN }}
-
 jobs:
   release:
     runs-on: windows-latest
@@ -20,13 +17,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
-
-      - name: Verify private upstream access is configured
-        shell: pwsh
-        run: |
-          if ([string]::IsNullOrWhiteSpace($env:SOL_FULL_UPSTREAM_TOKEN)) {
-            throw 'Missing Actions secret SOL_FULL_UPSTREAM_TOKEN. It needs read-only Contents access to diegocesaretti/SOL and diegocesaretti/Whatsapp-Codex-Nexo.'
-          }
 
       - name: Assemble exact pinned release bundle
         shell: pwsh
