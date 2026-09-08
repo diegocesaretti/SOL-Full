@@ -26,16 +26,61 @@ function Assert-Sha256([string]$Path, [string]$Expected) {
   return $actual
 }
 
-function Assert-SolPlugin([string]$Path) {
+function Read-SolPluginManifest([string]$Path) {
   Add-Type -AssemblyName System.IO.Compression.FileSystem
   $resolved = (Resolve-Path $Path).Path
   $zip = [System.IO.Compression.ZipFile]::OpenRead($resolved)
   try {
-    $pluginManifest = $zip.Entries | Where-Object { $_.FullName -eq "sol-plugin.json" } | Select-Object -First 1
-    if (-not $pluginManifest) { throw "Plugin package $Path does not contain sol-plugin.json at its root" }
+    $entry = $zip.Entries | Where-Object { $_.FullName -eq "sol-plugin.json" } | Select-Object -First 1
+    if (-not $entry) { throw "Plugin package $Path does not contain sol-plugin.json at its root" }
+    $reader = [System.IO.StreamReader]::new($entry.Open(), [System.Text.Encoding]::UTF8, $true)
+    try {
+      return ($reader.ReadToEnd() | ConvertFrom-Json)
+    }
+    finally {
+      $reader.Dispose()
+    }
   }
   finally {
     $zip.Dispose()
+  }
+}
+
+function Get-PackagedHostCapabilities([string]$CoreDestination) {
+  $typesPath = Join-Path $CoreDestination "apps/server/dist/modules/plugins/types.js"
+  if (-not (Test-Path $typesPath)) {
+    throw "Packaged SOL Core does not expose plugin host capabilities at expected path: $typesPath"
+  }
+
+  $source = Get-Content -Raw -Path $typesPath
+  $match = [regex]::Match($source, 'SOL_PLUGIN_HOST_CAPABILITIES\s*=\s*\[(?<body>[\s\S]*?)\]')
+  if (-not $match.Success) {
+    throw "Could not read SOL_PLUGIN_HOST_CAPABILITIES from packaged SOL Core"
+  }
+
+  $capabilities = @(
+    [regex]::Matches($match.Groups['body'].Value, '"(?<cap>[a-z0-9][a-z0-9._:-]*)"') |
+      ForEach-Object { $_.Groups['cap'].Value } |
+      Select-Object -Unique
+  )
+  if (-not $capabilities.Count) {
+    throw "Packaged SOL Core declared no plugin host capabilities"
+  }
+  return $capabilities
+}
+
+function Assert-PluginHostCompatibility([string[]]$HostCapabilities, [object[]]$Plugins) {
+  foreach ($plugin in $Plugins) {
+    $requires = @()
+    $requiresProperty = $plugin.Manifest.PSObject.Properties['requires']
+    if ($null -ne $requiresProperty -and $null -ne $plugin.Manifest.requires) {
+      $requires = @($plugin.Manifest.requires | ForEach-Object { [string]$_ })
+    }
+    $missing = @($requires | Where-Object { $_ -notin $HostCapabilities })
+    if ($missing.Count) {
+      throw "Plugin $($plugin.Component.name) requires host capabilities not provided by packaged SOL Core: $($missing -join ', ')"
+    }
+    Write-Host "Compatible: $($plugin.Component.name) requires [$($requires -join ', ')]"
   }
 }
 
@@ -51,6 +96,8 @@ Remove-Item -Recurse -Force $workRoot -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force -Path $stageRoot, $downloadRoot, (Join-Path $stageRoot "plugins"), (Join-Path $stageRoot "manifest") | Out-Null
 
 $componentHashes = @()
+$hostCapabilities = @()
+$pluginManifests = @()
 foreach ($component in $manifest.components) {
   $assetPath = Join-Path $downloadRoot ([string]$component.asset)
   Download-ReleaseAsset $component $assetPath
@@ -65,15 +112,23 @@ foreach ($component in $manifest.components) {
     if (-not (Test-Path $launcher)) {
       throw "SOL Core archive did not produce expected launcher: $launcher"
     }
+    $hostCapabilities = @(Get-PackagedHostCapabilities $coreDestination)
+    Write-Host "Packaged SOL host capabilities: $($hostCapabilities -join ', ')"
   }
   elseif ($component.kind -eq "plugin") {
-    Assert-SolPlugin $assetPath
+    $pluginManifest = Read-SolPluginManifest $assetPath
+    $pluginManifests += [pscustomobject]@{ Component = $component; Manifest = $pluginManifest }
     Copy-Item $assetPath (Join-Path $stageRoot "plugins") -Force
   }
   else {
     throw "Unknown component kind: $($component.kind)"
   }
 }
+
+if (-not $hostCapabilities.Count) {
+  throw "No SOL Core host capabilities were discovered"
+}
+Assert-PluginHostCompatibility $hostCapabilities $pluginManifests
 
 Copy-Item (Join-Path $repoRoot $ManifestPath) (Join-Path $stageRoot "manifest/sol-full.json") -Force
 
@@ -92,10 +147,11 @@ Plugins incluidos:
 Instalacion:
 1. Inicia SOL desde la carpeta SOL.
 2. Completa el onboarding de SOL si corresponde.
-3. En Services/Plugins instala los archivos .solplugin de la carpeta plugins.
+3. En Sistema -> Plugins instala los archivos .solplugin de la carpeta plugins. Las conexiones instaladas tambien aparecen en Conexiones.
 4. Configura credenciales y permisos desde SOL. No se incluyen secretos en este bundle.
 
 La combinacion exacta de repositorios, releases, commits y SHA-256 esta en manifest\sol-full.json.
+El ensamblado tambien verifica que todos los requires de cada plugin existan en las capacidades del SOL Core empaquetado.
 "@
 Set-Content -Path (Join-Path $stageRoot "INSTALL.txt") -Value $installText -Encoding UTF8
 
