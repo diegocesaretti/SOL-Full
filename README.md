@@ -4,29 +4,41 @@ SOL-Full es la distribución Windows probada de **SOL Core + plugins oficiales d
 
 Este repositorio no duplica los árboles fuente de cada proyecto. En cambio, fija artefactos de release conocidos, verifica sus SHA-256, los organiza en un único bundle y ejecuta CI de integración.
 
-## Incluido en `0.13.0-preview.5`
+## Incluido en `0.13.0-preview.7`
 
 | Componente | Versión / tag | Artefacto |
 | --- | --- | --- |
-| SOL Core | `main@24ac1fe` / `sol-windows-latest` | `SOL-Windows.zip` |
-| Nexo · WhatsApp | `0.9.2` / `sol-plugin-latest` | `Nexo.solplugin` |
+| SOL Core | `main@b737282` / `sol-windows-latest` | `SOL-Windows.zip` |
+| Nexo · WhatsApp | `0.9.3` / `sol-plugin-latest` | `Nexo.solplugin` |
 | Home Assistant | `0.2.0` / `home-assistant-plugin-latest` | `HomeAssistant.solplugin` |
-| Codex Audio Remote | `1.3.0` / `sol-plugin-latest` | `CodexAudioRemote.solplugin` |
+| Codex Audio Remote | `1.3.2` / `sol-plugin-latest` | `CodexAudioRemote.solplugin` |
 
 La combinación exacta de repositorio, release, asset id, commit fuente y SHA-256 está en [`manifest/sol-full.json`](manifest/sol-full.json).
 
-### Alineación de identidad y Codex
+### Fundación de plataforma
 
-Home Assistant y Codex Audio Remote comparten el contrato de **Personas canónicas de SOL**. Una Persona representa al humano; no equivale a una cuenta/miembro con acceso y por sí sola no otorga permisos. Home Assistant puede resolver `person.*` a Personas de SOL y Audio Remote valida sus bindings de hablante contra esas Personas antes de persistirlos.
+Este preview incorpora en SOL Core las capas ya mergeadas para futuras integraciones sin migrar ni alterar forzosamente Nexo, Home Assistant o Audio Remote:
 
-Nexo 0.9.2 mantiene `gpt-5.6-sol` con reasoning `low` y verbosity `low` por defecto para WhatsApp, el worker desacoplado del modelo global, limpieza de proyecciones al eliminar cuentas y la persistencia/outbox endurecida de las revisiones anteriores. Esta revisión corrige además el empaquetado `.solplugin`: las dependencias de producción se podan sólo de metadata no necesaria en runtime y el ZIP se genera sin entradas de directorio redundantes. El paquete resultante fue validado con **1675 entradas**, por debajo del máximo de 2000 que aplica SOL, y con smoke tests de imports runtime.
+- actualización persistente del Core y plugins sin reconfigurar, con rollback;
+- estado portable persistente fuera del directorio de la versión;
+- `connections.v1` para cuentas externas estándar;
+- migrations automáticas serializadas con PostgreSQL advisory lock;
+- `credentials.v1` con Vault AES-256-GCM, ciphertext en PostgreSQL/Neon y clave maestra sólo en `SOL_DATA_DIR/vault.key`.
 
-Audio Remote 1.3.0 requiere `identity.read`; por eso el bundle fija un SOL Core construido desde el merge que incorpora ese contrato. El assembler inspecciona las capacidades del **Core realmente empaquetado** y aborta si cualquier `requires` de un plugin no está disponible en ese host.
+OAuth universal todavía no forma parte de este bundle: permanece en desarrollo hasta completar CI/revisión.
+
+### Plugins actuales
+
+Nexo 0.9.3 mantiene el worker Codex explícito y el empaquetado compacto compatible con los límites del host.
+
+Home Assistant 0.2.0 conserva su contrato actual y fue reconstruido desde el mismo commit del Core para validar compatibilidad.
+
+Codex Audio Remote 1.3.2 mantiene Realtime V3/WebRTC y delega el contexto Home Assistant a través de SOL en lugar de mantener un segundo caché HA en modo plugin.
 
 ## Bundle generado
 
 ```text
-SOL-Full-Windows-0.13.0-preview.5.zip
+SOL-Full-Windows-0.13.0-preview.7.zip
 ├─ SOL/
 ├─ plugins/
 │  ├─ Nexo.solplugin
@@ -50,19 +62,21 @@ Requisitos: Windows PowerShell 7+ y acceso de red a GitHub.
 Salida:
 
 ```text
-dist/SOL-Full-Windows-0.13.0-preview.5.zip
+dist/SOL-Full-Windows-0.13.0-preview.7.zip
 dist/SHA256SUMS.txt
 ```
 
 El build aborta si un asset descargado no coincide con el SHA-256 fijado, si un `.solplugin` no contiene exactamente un `sol-plugin.json` en su raíz, si supera los **2000 ZIP entries** o los **128 MiB descomprimidos** permitidos por SOL, si SOL Core no produce `SOL/SOL.exe`, o si un plugin requiere una capacidad que el SOL Core empaquetado no ofrece.
 
-## Instalación
+## Instalación / actualización
 
 1. Extraé el ZIP de SOL-Full.
-2. Iniciá SOL desde `SOL/` y completá el onboarding si corresponde.
-3. Abrí **Sistema → Plugins** (las conexiones instaladas también se descubren desde **Conexiones**).
-4. Instalá los tres `.solplugin` de `plugins/`.
-5. Configurá permisos y credenciales desde SOL. No se incluyen secretos de usuario en el bundle.
+2. Iniciá `SOL/SOL.exe`.
+3. El launcher reutiliza el estado persistente existente de SOL; no copies manualmente `.env` ni `.sol` entre versiones.
+4. Para instalaciones nuevas, abrí **Sistema → Plugins** e instalá los `.solplugin` de `plugins/`.
+5. Para instalaciones existentes, usá la actualización in-place de plugins cuando corresponda; settings y `plugin-data` permanecen fuera del paquete.
+
+No se incluyen secretos de usuario en el bundle.
 
 ## CI y releases
 
