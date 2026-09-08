@@ -4,21 +4,25 @@ SOL-Full es la distribución Windows probada de **SOL Core + plugins oficiales d
 
 Este repositorio no duplica los árboles fuente de cada proyecto. En cambio, fija artefactos de release conocidos, verifica sus SHA-256, los organiza en un único bundle y ejecuta CI de integración.
 
-## Incluido en `0.13.0-preview.1`
+## Incluido en `0.13.0-preview.2`
 
 | Componente | Versión / tag | Artefacto |
 | --- | --- | --- |
 | SOL Core | `sol-windows-preview-pr12` | `SOL-Windows.zip` |
 | Nexo · WhatsApp | `0.9.0` / `nexo-solplugin-preview-pr22` | `Nexo.solplugin` |
 | Home Assistant | `0.2.0` / `home-assistant-plugin-latest` | `HomeAssistant.solplugin` |
-| Codex Audio Remote | `1.1.0` / `sol-plugin-latest` | `CodexAudioRemote.solplugin` |
+| Codex Audio Remote | `1.3.0` / `sol-plugin-latest` | `CodexAudioRemote.solplugin` |
 
 La combinación exacta de repositorio, release, asset id, commit fuente y SHA-256 está en [`manifest/sol-full.json`](manifest/sol-full.json).
+
+### Alineación de identidad
+
+Home Assistant y Codex Audio Remote comparten ahora el contrato de **Personas canónicas de SOL**. Una Persona representa al humano; no equivale a una cuenta/miembro con acceso y por sí sola no otorga permisos. Home Assistant puede resolver `person.*` a Personas de SOL y Audio Remote valida sus bindings de hablante contra esas Personas antes de persistirlos.
 
 ## Bundle generado
 
 ```text
-SOL-Full-Windows-0.13.0-preview.1.zip
+SOL-Full-Windows-0.13.0-preview.2.zip
 ├─ SOL/
 ├─ plugins/
 │  ├─ Nexo.solplugin
@@ -42,7 +46,7 @@ Requisitos: Windows PowerShell 7+ y acceso de red a GitHub.
 Salida:
 
 ```text
-dist/SOL-Full-Windows-0.13.0-preview.1.zip
+dist/SOL-Full-Windows-0.13.0-preview.2.zip
 dist/SHA256SUMS.txt
 ```
 
@@ -52,7 +56,7 @@ El build aborta si un asset descargado no coincide con el SHA-256 fijado. Cada `
 
 1. Extraé el ZIP de SOL-Full.
 2. Iniciá SOL desde `SOL/` y completá el onboarding si corresponde.
-3. Abrí **Services / Plugins**.
+3. Abrí **Sistema → Plugins** (las conexiones instaladas también se descubren desde **Conexiones**).
 4. Instalá los tres `.solplugin` de `plugins/`.
 5. Configurá permisos y credenciales desde SOL. No se incluyen secretos de usuario en el bundle.
 
