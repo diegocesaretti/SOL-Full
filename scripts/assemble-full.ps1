@@ -7,18 +7,11 @@ $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
 
 function Download-ReleaseAsset([object]$Component, [string]$Destination) {
-  if ($Component.requiresAuth -and [string]::IsNullOrWhiteSpace($env:SOL_FULL_UPSTREAM_TOKEN)) {
-    throw "SOL_FULL_UPSTREAM_TOKEN is required to read private upstream release $($Component.repository)/$($Component.releaseTag)"
-  }
-
   $apiUrl = "https://api.github.com/repos/$($Component.repository)/releases/assets/$($Component.assetId)"
   $headers = @{
     Accept = "application/octet-stream"
     "X-GitHub-Api-Version" = "2022-11-28"
     "User-Agent" = "SOL-Full-Assembler"
-  }
-  if ($Component.requiresAuth) {
-    $headers.Authorization = "Bearer $env:SOL_FULL_UPSTREAM_TOKEN"
   }
 
   Write-Host "Downloading $($Component.asset) from $($Component.repository) release $($Component.releaseTag)"
