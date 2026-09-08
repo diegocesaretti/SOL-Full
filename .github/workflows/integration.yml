@@ -10,13 +10,27 @@ permissions:
   contents: read
 
 jobs:
-  assemble:
+  build-and-assemble:
     runs-on: windows-latest
     steps:
-      - name: Checkout
+      - name: Checkout SOL-Full
         uses: actions/checkout@v4
 
-      - name: Assemble pinned SOL-Full bundle
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Build pinned upstream components
+        shell: pwsh
+        run: ./scripts/build-components.ps1
+
+      - name: Assemble SOL-Full bundle
         shell: pwsh
         run: ./scripts/assemble-full.ps1
 
