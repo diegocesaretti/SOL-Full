@@ -1,0 +1,32 @@
+name: SOL-Full release
+
+on:
+  push:
+    tags:
+      - "sol-full-v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout SOL-Full
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Assemble exact pinned release bundle
+        shell: pwsh
+        run: ./scripts/assemble-full.ps1
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          prerelease: true
+          generate_release_notes: true
+          files: |
+            dist/SOL-Full-Windows-*.zip
+            dist/SHA256SUMS.txt
