@@ -39,15 +39,20 @@ function Assert-SolPlugin([string]$Path) {
   }
 }
 
-$manifest = Get-Content -Raw -Path $ManifestPath | ConvertFrom-Json
-$version = [string]$manifest.bundle.version
 $repoRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
+$resolvedManifest = if ([IO.Path]::IsPathRooted($ManifestPath)) { $ManifestPath } else { Join-Path $repoRoot $ManifestPath }
+$manifest = Get-Content -Raw -LiteralPath $resolvedManifest | ConvertFrom-Json
+$version = [string]$manifest.bundle.version
+if ($version -notmatch '^\d+\.\d+\.\d+(?:[-+][A-Za-z0-9.-]+)?$') { throw 'Invalid bundle version' }
 $outRoot = Join-Path $repoRoot $OutputDirectory
 $workRoot = Join-Path $outRoot ".work"
 $stageRoot = Join-Path $workRoot "SOL-Full-$version"
 $downloadRoot = Join-Path $workRoot "downloads"
 
-Remove-Item -Recurse -Force $workRoot -ErrorAction SilentlyContinue
+$resolvedWork = [IO.Path]::GetFullPath($workRoot)
+$resolvedOutput = [IO.Path]::GetFullPath($outRoot).TrimEnd([IO.Path]::DirectorySeparatorChar)
+if (-not $resolvedWork.StartsWith($resolvedOutput + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) { throw 'Unsafe work directory' }
+Remove-Item -LiteralPath $resolvedWork -Recurse -Force -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force -Path $stageRoot, $downloadRoot, (Join-Path $stageRoot "plugins"), (Join-Path $stageRoot "manifest") | Out-Null
 
 $componentHashes = @()
@@ -75,7 +80,15 @@ foreach ($component in $manifest.components) {
   }
 }
 
-Copy-Item (Join-Path $repoRoot $ManifestPath) (Join-Path $stageRoot "manifest/sol-full.json") -Force
+$core = @($manifest.components | Where-Object { $_.kind -eq 'core' })
+if ($core.Count -ne 1) { throw 'Expected exactly one SOL Core' }
+$coreDirectory = Join-Path $stageRoot $core[0].destination
+$node = Join-Path $coreDirectory 'runtime/node.exe'
+if (-not (Test-Path -LiteralPath $node)) { throw 'SOL Core must include runtime/node.exe' }
+& $node (Join-Path $repoRoot 'scripts/verify-compatibility.mjs') $coreDirectory (Join-Path $stageRoot 'plugins') $resolvedManifest
+if ($LASTEXITCODE -ne 0) { throw 'Plugin compatibility validation failed; refusing to publish an incompatible bundle' }
+
+Copy-Item -LiteralPath $resolvedManifest -Destination (Join-Path $stageRoot "manifest/sol-full.json") -Force
 
 $installText = @"
 SOL-Full $version
