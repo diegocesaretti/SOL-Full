@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "bundle": {
     "name": "SOL-Full",
-    "version": "0.13.0-preview.3",
+    "version": "0.13.0-preview.4",
     "platform": "windows-x64",
     "strategy": "pinned-release-artifacts"
   },
@@ -24,13 +24,13 @@
       "id": "nexo-whatsapp",
       "name": "Nexo · WhatsApp",
       "kind": "plugin",
-      "version": "0.9.0",
+      "version": "0.9.1",
       "repository": "diegocesaretti/Whatsapp-Codex-Nexo",
-      "releaseTag": "nexo-solplugin-preview-pr22",
+      "releaseTag": "sol-plugin-latest",
       "asset": "Nexo.solplugin",
-      "assetId": 549533142,
-      "sourceCommit": "516b06080bc47c540f6c4fa881c822902eec0e74",
-      "sha256": "82526d2abbbbe4a9756194cff895d4a3e65ac228959b3d11195966891fe3ebad",
+      "assetId": 549762631,
+      "sourceCommit": "4765c89a1b214bbcdca1419ae2cd440a2a185d0d",
+      "sha256": "723f444b6f31c9c3fcf4a4005f6e8fd6da3b2f6abdedac0e4d48cf8efc118cae",
       "destination": "plugins"
     },
     {

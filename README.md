@@ -4,27 +4,29 @@ SOL-Full es la distribución Windows probada de **SOL Core + plugins oficiales d
 
 Este repositorio no duplica los árboles fuente de cada proyecto. En cambio, fija artefactos de release conocidos, verifica sus SHA-256, los organiza en un único bundle y ejecuta CI de integración.
 
-## Incluido en `0.13.0-preview.3`
+## Incluido en `0.13.0-preview.4`
 
 | Componente | Versión / tag | Artefacto |
 | --- | --- | --- |
 | SOL Core | `main@24ac1fe` / `sol-windows-latest` | `SOL-Windows.zip` |
-| Nexo · WhatsApp | `0.9.0` / `nexo-solplugin-preview-pr22` | `Nexo.solplugin` |
+| Nexo · WhatsApp | `0.9.1` / `sol-plugin-latest` | `Nexo.solplugin` |
 | Home Assistant | `0.2.0` / `home-assistant-plugin-latest` | `HomeAssistant.solplugin` |
 | Codex Audio Remote | `1.3.0` / `sol-plugin-latest` | `CodexAudioRemote.solplugin` |
 
 La combinación exacta de repositorio, release, asset id, commit fuente y SHA-256 está en [`manifest/sol-full.json`](manifest/sol-full.json).
 
-### Alineación de identidad
+### Alineación de identidad y Codex
 
-Home Assistant y Codex Audio Remote comparten ahora el contrato de **Personas canónicas de SOL**. Una Persona representa al humano; no equivale a una cuenta/miembro con acceso y por sí sola no otorga permisos. Home Assistant puede resolver `person.*` a Personas de SOL y Audio Remote valida sus bindings de hablante contra esas Personas antes de persistirlos.
+Home Assistant y Codex Audio Remote comparten el contrato de **Personas canónicas de SOL**. Una Persona representa al humano; no equivale a una cuenta/miembro con acceso y por sí sola no otorga permisos. Home Assistant puede resolver `person.*` a Personas de SOL y Audio Remote valida sus bindings de hablante contra esas Personas antes de persistirlos.
 
-Audio Remote 1.3.0 requiere `identity.read`; por eso `preview.3` fija un SOL Core construido desde el merge que incorpora ese contrato. El assembler inspecciona las capacidades del **Core realmente empaquetado** y aborta si cualquier `requires` de un plugin no está disponible en ese host.
+Nexo 0.9.1 queda alineado con la generación actual de SOL: usa `gpt-5.6-sol` con reasoning `low` y verbosity `low` por defecto para WhatsApp, mantiene el worker desacoplado del modelo global, limpia sus proyecciones de inputs al eliminar cuentas y conserva la persistencia/outbox endurecida de las revisiones anteriores.
+
+Audio Remote 1.3.0 requiere `identity.read`; por eso el bundle fija un SOL Core construido desde el merge que incorpora ese contrato. El assembler inspecciona las capacidades del **Core realmente empaquetado** y aborta si cualquier `requires` de un plugin no está disponible en ese host.
 
 ## Bundle generado
 
 ```text
-SOL-Full-Windows-0.13.0-preview.3.zip
+SOL-Full-Windows-0.13.0-preview.4.zip
 ├─ SOL/
 ├─ plugins/
 │  ├─ Nexo.solplugin
@@ -48,7 +50,7 @@ Requisitos: Windows PowerShell 7+ y acceso de red a GitHub.
 Salida:
 
 ```text
-dist/SOL-Full-Windows-0.13.0-preview.3.zip
+dist/SOL-Full-Windows-0.13.0-preview.4.zip
 dist/SHA256SUMS.txt
 ```
 
