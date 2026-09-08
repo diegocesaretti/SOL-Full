@@ -6,6 +6,9 @@ param(
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
 
+$MaxPluginEntries = 2_000
+$MaxPluginUncompressedBytes = 128 * 1024 * 1024
+
 function Download-ReleaseAsset([object]$Component, [string]$Destination) {
   $apiUrl = "https://api.github.com/repos/$($Component.repository)/releases/assets/$($Component.assetId)"
   $headers = @{
@@ -31,8 +34,26 @@ function Read-SolPluginManifest([string]$Path) {
   $resolved = (Resolve-Path $Path).Path
   $zip = [System.IO.Compression.ZipFile]::OpenRead($resolved)
   try {
-    $entry = $zip.Entries | Where-Object { $_.FullName -eq "sol-plugin.json" } | Select-Object -First 1
-    if (-not $entry) { throw "Plugin package $Path does not contain sol-plugin.json at its root" }
+    $entries = @($zip.Entries)
+    if ($entries.Count -gt $MaxPluginEntries) {
+      throw "Plugin package $Path contains too many files ($($entries.Count)); SOL allows at most $MaxPluginEntries ZIP entries"
+    }
+
+    [int64]$uncompressedBytes = 0
+    foreach ($zipEntry in $entries) {
+      $uncompressedBytes += [int64]$zipEntry.Length
+    }
+    if ($uncompressedBytes -gt $MaxPluginUncompressedBytes) {
+      throw "Plugin package $Path expands beyond SOL's 128 MiB limit ($uncompressedBytes bytes)"
+    }
+
+    $manifestEntries = @($entries | Where-Object { $_.FullName -eq "sol-plugin.json" })
+    if ($manifestEntries.Count -ne 1) {
+      throw "Plugin package $Path must contain exactly one sol-plugin.json at its root; found $($manifestEntries.Count)"
+    }
+
+    Write-Host "SOL package limits OK: $Path has $($entries.Count) entries and $uncompressedBytes uncompressed bytes"
+    $entry = $manifestEntries[0]
     $reader = [System.IO.StreamReader]::new($entry.Open(), [System.Text.Encoding]::UTF8, $true)
     try {
       return ($reader.ReadToEnd() | ConvertFrom-Json)
@@ -151,7 +172,7 @@ Instalacion:
 4. Configura credenciales y permisos desde SOL. No se incluyen secretos en este bundle.
 
 La combinacion exacta de repositorios, releases, commits y SHA-256 esta en manifest\sol-full.json.
-El ensamblado tambien verifica que todos los requires de cada plugin existan en las capacidades del SOL Core empaquetado.
+El ensamblado verifica los limites ZIP que aplica SOL y que todos los requires de cada plugin existan en las capacidades del SOL Core empaquetado.
 "@
 Set-Content -Path (Join-Path $stageRoot "INSTALL.txt") -Value $installText -Encoding UTF8
 
