@@ -4,11 +4,11 @@ SOL-Full es la distribución Windows probada de **SOL Core + plugins oficiales d
 
 Este repositorio no duplica los árboles fuente de cada proyecto. En cambio, fija artefactos de release conocidos, verifica sus SHA-256, los organiza en un único bundle y ejecuta CI de integración.
 
-## Incluido en `0.13.0-preview.2`
+## Incluido en `0.13.0-preview.3`
 
 | Componente | Versión / tag | Artefacto |
 | --- | --- | --- |
-| SOL Core | `sol-windows-preview-pr12` | `SOL-Windows.zip` |
+| SOL Core | `main@24ac1fe` / `sol-windows-latest` | `SOL-Windows.zip` |
 | Nexo · WhatsApp | `0.9.0` / `nexo-solplugin-preview-pr22` | `Nexo.solplugin` |
 | Home Assistant | `0.2.0` / `home-assistant-plugin-latest` | `HomeAssistant.solplugin` |
 | Codex Audio Remote | `1.3.0` / `sol-plugin-latest` | `CodexAudioRemote.solplugin` |
@@ -19,10 +19,12 @@ La combinación exacta de repositorio, release, asset id, commit fuente y SHA-25
 
 Home Assistant y Codex Audio Remote comparten ahora el contrato de **Personas canónicas de SOL**. Una Persona representa al humano; no equivale a una cuenta/miembro con acceso y por sí sola no otorga permisos. Home Assistant puede resolver `person.*` a Personas de SOL y Audio Remote valida sus bindings de hablante contra esas Personas antes de persistirlos.
 
+Audio Remote 1.3.0 requiere `identity.read`; por eso `preview.3` fija un SOL Core construido desde el merge que incorpora ese contrato. El assembler inspecciona las capacidades del **Core realmente empaquetado** y aborta si cualquier `requires` de un plugin no está disponible en ese host.
+
 ## Bundle generado
 
 ```text
-SOL-Full-Windows-0.13.0-preview.2.zip
+SOL-Full-Windows-0.13.0-preview.3.zip
 ├─ SOL/
 ├─ plugins/
 │  ├─ Nexo.solplugin
@@ -46,11 +48,11 @@ Requisitos: Windows PowerShell 7+ y acceso de red a GitHub.
 Salida:
 
 ```text
-dist/SOL-Full-Windows-0.13.0-preview.2.zip
+dist/SOL-Full-Windows-0.13.0-preview.3.zip
 dist/SHA256SUMS.txt
 ```
 
-El build aborta si un asset descargado no coincide con el SHA-256 fijado. Cada `.solplugin` también se valida para comprobar que contiene `sol-plugin.json` en su raíz, y SOL Core debe producir `SOL/SOL.exe`.
+El build aborta si un asset descargado no coincide con el SHA-256 fijado, si un `.solplugin` no contiene `sol-plugin.json` en su raíz, si SOL Core no produce `SOL/SOL.exe`, **o si un plugin requiere una capacidad que el SOL Core empaquetado no ofrece**.
 
 ## Instalación
 
@@ -62,7 +64,7 @@ El build aborta si un asset descargado no coincide con el SHA-256 fijado. Cada `
 
 ## CI y releases
 
-Los pull requests ejecutan `.github/workflows/integration.yml`: descarga exactamente los assets públicos pinneados, verifica hashes y genera el bundle completo en `windows-latest`.
+Los pull requests ejecutan `.github/workflows/integration.yml`: descarga exactamente los assets públicos pinneados, verifica hashes, verifica compatibilidad host/plugin y genera el bundle completo en `windows-latest`.
 
 Los tags `sol-full-v*` ejecutan `.github/workflows/release.yml` y publican el ZIP ensamblado junto con `SHA256SUMS.txt`.
 
