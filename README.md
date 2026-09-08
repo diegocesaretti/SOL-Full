@@ -1,21 +1,21 @@
 # SOL-Full
 
-SOL-Full is the tested Windows distribution of **SOL Core + official SOL plugins**.
+SOL-Full es la distribución Windows probada de **SOL Core + plugins oficiales de SOL**.
 
-Instead of copying and diverging the source of each project, this repository pins known-good release artifacts, verifies their hashes, assembles them into one organized bundle and runs integration CI.
+Este repositorio no copia ni publica el código fuente de los proyectos privados. En cambio, fija artefactos de release conocidos, verifica sus SHA-256, los organiza en un único bundle y ejecuta CI de integración.
 
-## Included in `0.13.0-preview.1`
+## Incluido en `0.13.0-preview.1`
 
-| Component | Version / tag | Artifact |
+| Componente | Versión / tag | Artefacto |
 | --- | --- | --- |
 | SOL Core | `sol-windows-preview-pr12` | `SOL-Windows.zip` |
 | Nexo · WhatsApp | `0.9.0` / `nexo-solplugin-preview-pr22` | `Nexo.solplugin` |
 | Home Assistant | `0.2.0` / `home-assistant-plugin-latest` | `HomeAssistant.solplugin` |
 | Codex Audio Remote | `1.1.0` / `sol-plugin-latest` | `CodexAudioRemote.solplugin` |
 
-The exact source commits and SHA-256 digests live in [`manifest/sol-full.json`](manifest/sol-full.json).
+La combinación exacta de repositorio, release, asset id, commit fuente y SHA-256 está en [`manifest/sol-full.json`](manifest/sol-full.json).
 
-## Generated bundle
+## Bundle generado
 
 ```text
 SOL-Full-Windows-0.13.0-preview.1.zip
@@ -29,43 +29,62 @@ SOL-Full-Windows-0.13.0-preview.1.zip
 └─ INSTALL.txt
 ```
 
-SOL remains the host and source of truth. Plugins remain native `.solplugin` packages so SOL can manage their permissions, settings, lifecycle and independent updates.
+SOL sigue siendo el host y la fuente de verdad. Los plugins permanecen como paquetes `.solplugin` nativos para conservar permisos, settings, lifecycle y actualizaciones independientes.
 
-## Build locally
+## Acceso a upstreams privados
 
-Requirements: Windows PowerShell 7+ with internet access.
+`diegocesaretti/SOL` y `diegocesaretti/Whatsapp-Codex-Nexo` son repositorios privados. Por eso el ensamblador necesita un token GitHub de **solo lectura** que pueda leer sus releases.
+
+Usá un fine-grained Personal Access Token con acceso únicamente a esos repositorios y permiso **Contents: Read-only**, y exponelo como:
 
 ```powershell
+$env:SOL_FULL_UPSTREAM_TOKEN = "..."
+```
+
+Para GitHub Actions, guardalo como repository secret con el nombre:
+
+```text
+SOL_FULL_UPSTREAM_TOKEN
+```
+
+El token nunca se escribe en el manifest, los logs ni el bundle.
+
+## Build local
+
+Requisitos: Windows PowerShell 7+ y acceso de red a GitHub.
+
+```powershell
+$env:SOL_FULL_UPSTREAM_TOKEN = "<token-read-only>"
 ./scripts/assemble-full.ps1
 ```
 
-Output:
+Salida:
 
 ```text
 dist/SOL-Full-Windows-0.13.0-preview.1.zip
 dist/SHA256SUMS.txt
 ```
 
-The build aborts if an upstream artifact does not match the SHA-256 pinned in the manifest. Every plugin package is also checked for a root `sol-plugin.json`.
+El build aborta si un asset descargado no coincide con el SHA-256 fijado. Cada `.solplugin` también se valida para comprobar que contiene `sol-plugin.json` en su raíz, y SOL Core debe producir `SOL/SOL.exe`.
 
-## Install
+## Instalación
 
-1. Extract the generated SOL-Full ZIP.
-2. Start SOL from `SOL/` and complete onboarding if needed.
-3. Open **Services / Plugins** in SOL.
-4. Install the three `.solplugin` files from `plugins/`.
-5. Configure each plugin from SOL. Secrets and user credentials are intentionally not bundled.
+1. Extraé el ZIP de SOL-Full.
+2. Iniciá SOL desde `SOL/` y completá el onboarding si corresponde.
+3. Abrí **Services / Plugins**.
+4. Instalá los tres `.solplugin` de `plugins/`.
+5. Configurá permisos y credenciales desde SOL. No se incluyen secretos de usuario en el bundle.
 
-## Release flow
+## CI y releases
 
-Pull requests run `.github/workflows/integration.yml`, which assembles the complete pinned bundle on `windows-latest` and uploads it as a CI artifact.
+Los pull requests ejecutan `.github/workflows/integration.yml`. El job requiere el secret `SOL_FULL_UPSTREAM_TOKEN`, descarga exactamente los assets pinneados, verifica hashes y genera el bundle completo en `windows-latest`.
 
-Tags matching `sol-full-v*` run `.github/workflows/release.yml` and publish the assembled ZIP plus `SHA256SUMS.txt` as a GitHub release.
+Los tags `sol-full-v*` ejecutan `.github/workflows/release.yml` y publican el ZIP ensamblado junto con `SHA256SUMS.txt`.
 
-## Source repositories
+## Repositorios fuente
 
-- `diegocesaretti/SOL`
-- `diegocesaretti/Whatsapp-Codex-Nexo`
-- `diegocesaretti/Codex-audio-remote`
+- `diegocesaretti/SOL` — privado
+- `diegocesaretti/Whatsapp-Codex-Nexo` — privado
+- `diegocesaretti/Codex-audio-remote` — público
 
-See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for ownership, reproducibility and upgrade rules.
+Ver [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) para ownership, seguridad, reproducibilidad y política de upgrades.
