@@ -6,7 +6,7 @@ param(
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
 
-$MaxPluginEntries = 2_000
+$MaxPluginEntries = 2000
 $MaxPluginUncompressedBytes = 128 * 1024 * 1024
 
 function Download-ReleaseAsset([object]$Component, [string]$Destination) {
