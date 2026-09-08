@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "bundle": {
     "name": "SOL-Full",
-    "version": "0.13.0-preview.10",
+    "version": "0.13.0-preview.11",
     "platform": "windows-x64",
     "strategy": "pinned-release-artifacts"
   },
@@ -11,13 +11,13 @@
       "id": "sol-core",
       "name": "SOL Core",
       "kind": "core",
-      "version": "main@ed6e831",
+      "version": "main@2e205f0",
       "repository": "diegocesaretti/SOL",
       "releaseTag": "sol-windows-latest",
       "asset": "SOL-Windows.zip",
-      "assetId": 551428959,
-      "sourceCommit": "ed6e831e48d0dea346798fa04b59fa48f471c972",
-      "sha256": "2cb8a4025014a1c9b6a5f3ffee754411b4ad7f970b37be7ef56c68a3ce2c036b",
+      "assetId": 551471068,
+      "sourceCommit": "2e205f0f42db3db9a602035a8e2de0b52a926cdc",
+      "sha256": "ee63db6381e6444c90cd75d39696f8f9df77d6fbf8d5699ed199518d689a8df7",
       "destination": "SOL"
     },
     {
