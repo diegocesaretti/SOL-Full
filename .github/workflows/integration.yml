@@ -9,28 +9,36 @@ on:
 permissions:
   contents: read
 
+env:
+  SOL_FULL_UPSTREAM_TOKEN: ${{ secrets.SOL_FULL_UPSTREAM_TOKEN }}
+
 jobs:
-  build-and-assemble:
+  assemble:
     runs-on: windows-latest
     steps:
       - name: Checkout SOL-Full
         uses: actions/checkout@v4
-
-      - name: Setup Node.js 24
-        uses: actions/setup-node@v4
         with:
-          node-version: 24
+          persist-credentials: false
 
-      - name: Setup .NET 8
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
-
-      - name: Build pinned upstream components
+      - name: Validate manifest
         shell: pwsh
-        run: ./scripts/build-components.ps1
+        run: |
+          $manifest = Get-Content -Raw manifest/sol-full.json | ConvertFrom-Json
+          if ($manifest.schemaVersion -ne 1) { throw 'Unsupported manifest schemaVersion' }
+          if ($manifest.components.Count -ne 4) { throw 'Expected exactly four pinned components' }
+          $ids = @($manifest.components | ForEach-Object { $_.id })
+          if (($ids | Select-Object -Unique).Count -ne $ids.Count) { throw 'Duplicate component ids' }
+          Write-Host "SOL-Full $($manifest.bundle.version): $($ids -join ', ')"
 
-      - name: Assemble SOL-Full bundle
+      - name: Verify private upstream access is configured
+        shell: pwsh
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:SOL_FULL_UPSTREAM_TOKEN)) {
+            throw 'Missing Actions secret SOL_FULL_UPSTREAM_TOKEN. It needs read-only Contents access to diegocesaretti/SOL and diegocesaretti/Whatsapp-Codex-Nexo.'
+          }
+
+      - name: Assemble exact pinned release bundle
         shell: pwsh
         run: ./scripts/assemble-full.ps1
 
@@ -40,7 +48,7 @@ jobs:
           $manifest = Get-Content -Raw manifest/sol-full.json | ConvertFrom-Json
           $bundle = "dist/SOL-Full-Windows-$($manifest.bundle.version).zip"
           if (-not (Test-Path $bundle)) { throw "Bundle not created: $bundle" }
-          if (-not (Test-Path dist/SHA256SUMS.txt)) { throw "SHA256SUMS.txt was not created" }
+          if (-not (Test-Path dist/SHA256SUMS.txt)) { throw 'SHA256SUMS.txt was not created' }
           Get-Item $bundle | Format-List Name,Length
           Get-Content dist/SHA256SUMS.txt
 
