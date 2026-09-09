@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "bundle": {
     "name": "SOL-Full",
-    "version": "0.13.0-preview.11",
+    "version": "0.13.0-preview.12",
     "platform": "windows-x64",
     "strategy": "pinned-release-artifacts"
   },
@@ -11,26 +11,26 @@
       "id": "sol-core",
       "name": "SOL Core",
       "kind": "core",
-      "version": "main@2e205f0",
+      "version": "main@e357c0b",
       "repository": "diegocesaretti/SOL",
       "releaseTag": "sol-windows-latest",
       "asset": "SOL-Windows.zip",
-      "assetId": 551471068,
-      "sourceCommit": "2e205f0f42db3db9a602035a8e2de0b52a926cdc",
-      "sha256": "ee63db6381e6444c90cd75d39696f8f9df77d6fbf8d5699ed199518d689a8df7",
+      "assetId": 551593171,
+      "sourceCommit": "e357c0b2d9c5060e6a401a7b0dd18fc61360ef9f",
+      "sha256": "ad7da61db58e33b9f3d5d79a47aa9c7653ab4df3177aa12001223917a8d808b5",
       "destination": "SOL"
     },
     {
       "id": "nexo-whatsapp",
       "name": "Nexo · WhatsApp",
       "kind": "plugin",
-      "version": "0.9.4",
+      "version": "0.9.5",
       "repository": "diegocesaretti/Whatsapp-Codex-Nexo",
       "releaseTag": "sol-plugin-latest",
       "asset": "Nexo.solplugin",
-      "assetId": 551424205,
-      "sourceCommit": "3cbd1ca66ce99ea48dc8b1c7a87959de2fcb540b",
-      "sha256": "164c4e16cccd4c1a1698b7f46ac2a89fd53be3f79420a759b86026b61f23ded0",
+      "assetId": 551596472,
+      "sourceCommit": "5a89abe08d6fe285a1434276b0f68655b60c711b",
+      "sha256": "7e8a96565c24682371752f71da124d4e6d95152713c15a42ff06ba9be3a10371",
       "destination": "plugins"
     },
     {
@@ -41,9 +41,9 @@
       "repository": "diegocesaretti/SOL",
       "releaseTag": "home-assistant-plugin-latest",
       "asset": "HomeAssistant.solplugin",
-      "assetId": 551426178,
-      "sourceCommit": "ed6e831e48d0dea346798fa04b59fa48f471c972",
-      "sha256": "a58ec452ca27abf88d14970fc5db04fb2286775ae60958895cb21e1ce22d0283",
+      "assetId": 551589153,
+      "sourceCommit": "e357c0b2d9c5060e6a401a7b0dd18fc61360ef9f",
+      "sha256": "76ac114a4a5831fb598552279784bc8ef52b8dbcfc48d6e33d3fcf958ee36b84",
       "destination": "plugins"
     },
     {
