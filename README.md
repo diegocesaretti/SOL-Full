@@ -8,10 +8,10 @@ Este repositorio no duplica los árboles fuente de cada proyecto. En cambio, fij
 
 | Componente | Versión / tag | Artefacto |
 | --- | --- | --- |
-| SOL Core | `main@e357c0b` / `sol-windows-latest` | `SOL-Windows.zip` |
-| Nexo · WhatsApp | `0.9.5` / `sol-plugin-latest` | `Nexo.solplugin` |
+| SOL Core | `main@2425977` / `sol-windows-latest` | `SOL-Core-Windows.zip` |
+| Nexo · WhatsApp | `0.11.2` / `sol-plugin-latest` | `Nexo.solplugin` |
 | Home Assistant | `0.3.24` / `home-assistant-plugin-latest` | `HomeAssistant.solplugin` |
-| Codex Audio Remote | `1.3.2` / `sol-plugin-latest` | `CodexAudioRemote.solplugin` |
+| Codex Audio Remote | `1.5.2` / `sol-plugin-latest` | `CodexAudioRemote.solplugin` |
 
 La combinación exacta de repositorio, release, asset id, commit fuente y SHA-256 está en [`manifest/sol-full.json`](manifest/sol-full.json).
 
@@ -31,11 +31,11 @@ OAuth universal todavía no forma parte de este bundle: permanece en desarrollo 
 
 ### Plugins actuales
 
-Nexo 0.9.5 mantiene el worker Codex explícito y el empaquetado compacto compatible con los límites del host.
+Nexo 0.11.2 mantiene WhatsApp como input/output de SOL, media bidireccional, historial autorizado por miembro y acceso a herramientas registradas en SOL.
 
 Home Assistant 0.3.24 incorpora control Android TV directo mediante Home Assistant Remote, reproducción nativa de Stremio, cuenta/biblioteca de Stremio, resolución de episodios y perfiles de proveedores. El control de TV de esta versión no depende de Android TV Satellite.
 
-Codex Audio Remote 1.3.2 mantiene Realtime V3/WebRTC y delega el contexto Home Assistant a través de SOL en lugar de mantener un segundo caché HA en modo plugin.
+Codex Audio Remote 1.5.2 mantiene Realtime/WebRTC, control de calidad de audio, reconexión de transporte y delega herramientas/contexto de SOL en lugar de mantener integraciones paralelas.
 
 ## Bundle generado
 
