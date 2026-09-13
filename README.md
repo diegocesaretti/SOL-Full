@@ -4,13 +4,13 @@ SOL-Full es la distribución Windows probada de **SOL Core + plugins oficiales d
 
 Este repositorio no duplica los árboles fuente de cada proyecto. En cambio, fija artefactos de release conocidos, verifica sus SHA-256, los organiza en un único bundle y ejecuta CI de integración.
 
-## Incluido en `0.13.0-preview.13`
+## Incluido en `0.13.0-preview.14`
 
 | Componente | Versión / tag | Artefacto |
 | --- | --- | --- |
 | SOL Core | `main@2425977` / `sol-windows-latest` | `SOL-Core-Windows.zip` |
 | Nexo · WhatsApp | `0.11.2` / `sol-plugin-latest` | `Nexo.solplugin` |
-| Home Assistant | `0.3.24` / `home-assistant-plugin-latest` | `HomeAssistant.solplugin` |
+| Home Assistant | `0.3.25` / `home-assistant-plugin-latest` | `HomeAssistant.solplugin` |
 | Codex Audio Remote | `1.5.2` / `sol-plugin-latest` | `CodexAudioRemote.solplugin` |
 
 La combinación exacta de repositorio, release, asset id, commit fuente y SHA-256 está en [`manifest/sol-full.json`](manifest/sol-full.json).
@@ -33,14 +33,14 @@ OAuth universal todavía no forma parte de este bundle: permanece en desarrollo 
 
 Nexo 0.11.2 mantiene WhatsApp como input/output de SOL, media bidireccional, historial autorizado por miembro y acceso a herramientas registradas en SOL.
 
-Home Assistant 0.3.24 incorpora control Android TV directo mediante Home Assistant Remote, reproducción nativa de Stremio, cuenta/biblioteca de Stremio, resolución de episodios y perfiles de proveedores. El control de TV de esta versión no depende de Android TV Satellite.
+Home Assistant 0.3.25 incorpora control Android TV directo mediante Home Assistant Remote, reproducción nativa de Stremio, cuenta/biblioteca de Stremio, resolución de episodios y perfiles aislados de proveedores. La clasificación de audiencia distingue `kids` y `family`: puede usar decisiones explícitas de Codex, títulos forzados, ratings/certificaciones, géneros y una heurística conservadora; las decisiones se cachean por Stremio ID. Kids y Family reutilizan el proveedor familiar español/latino fail-closed. El control de TV no depende de Android TV Satellite.
 
 Codex Audio Remote 1.5.2 mantiene Realtime/WebRTC, control de calidad de audio, reconexión de transporte y delega herramientas/contexto de SOL en lugar de mantener integraciones paralelas.
 
 ## Bundle generado
 
 ```text
-SOL-Full-Windows-0.13.0-preview.13.zip
+SOL-Full-Windows-0.13.0-preview.14.zip
 ├─ SOL/
 ├─ plugins/
 │  ├─ Nexo.solplugin
@@ -77,7 +77,7 @@ Requisitos: Windows PowerShell 7+ y acceso de red a GitHub.
 Salida:
 
 ```text
-dist/SOL-Full-Windows-0.13.0-preview.13.zip
+dist/SOL-Full-Windows-0.13.0-preview.14.zip
 dist/SHA256SUMS.txt
 ```
 
