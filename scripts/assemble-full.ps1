@@ -6,8 +6,13 @@ param(
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
 
+# Keep these limits aligned with SOL Core's current plugin runtime:
+# - uploaded/compressed package: 256 MiB
+# - extracted package: 2x compressed limit = 512 MiB
+# - ZIP entries: 2000
 $MaxPluginEntries = 2000
-$MaxPluginUncompressedBytes = 128 * 1024 * 1024
+$MaxPluginPackageBytes = 256 * 1024 * 1024
+$MaxPluginUncompressedBytes = $MaxPluginPackageBytes * 2
 
 function Download-ReleaseAsset([object]$Component, [string]$Destination) {
   $apiUrl = "https://api.github.com/repos/$($Component.repository)/releases/assets/$($Component.assetId)"
@@ -32,6 +37,11 @@ function Assert-Sha256([string]$Path, [string]$Expected) {
 function Read-SolPluginManifest([string]$Path) {
   Add-Type -AssemblyName System.IO.Compression.FileSystem
   $resolved = (Resolve-Path $Path).Path
+  $packageBytes = (Get-Item $resolved).Length
+  if ($packageBytes -gt $MaxPluginPackageBytes) {
+    throw "Plugin package $Path exceeds SOL's 256 MiB compressed package limit ($packageBytes bytes)"
+  }
+
   $zip = [System.IO.Compression.ZipFile]::OpenRead($resolved)
   try {
     $entries = @($zip.Entries)
@@ -44,7 +54,7 @@ function Read-SolPluginManifest([string]$Path) {
       $uncompressedBytes += [int64]$zipEntry.Length
     }
     if ($uncompressedBytes -gt $MaxPluginUncompressedBytes) {
-      throw "Plugin package $Path expands beyond SOL's 128 MiB limit ($uncompressedBytes bytes)"
+      throw "Plugin package $Path expands beyond SOL's 512 MiB limit ($uncompressedBytes bytes)"
     }
 
     $manifestEntries = @($entries | Where-Object { $_.FullName -eq "sol-plugin.json" })
@@ -52,7 +62,7 @@ function Read-SolPluginManifest([string]$Path) {
       throw "Plugin package $Path must contain exactly one sol-plugin.json at its root; found $($manifestEntries.Count)"
     }
 
-    Write-Host "SOL package limits OK: $Path has $($entries.Count) entries and $uncompressedBytes uncompressed bytes"
+    Write-Host "SOL package limits OK: $Path has $($entries.Count) entries, $packageBytes compressed bytes and $uncompressedBytes uncompressed bytes"
     $entry = $manifestEntries[0]
     $reader = [System.IO.StreamReader]::new($entry.Open(), [System.Text.Encoding]::UTF8, $true)
     try {
@@ -126,7 +136,7 @@ foreach ($component in $manifest.components) {
   $componentHashes += "$assetHash  upstream/$($component.asset)"
 
   if ($component.kind -eq "core") {
-    # SOL-Windows.zip already contains a top-level SOL/ directory.
+    # The pinned Windows core archive contains a top-level SOL/ directory.
     Expand-Archive -Path $assetPath -DestinationPath $stageRoot -Force
     $coreDestination = Join-Path $stageRoot ([string]$component.destination)
     $launcher = Join-Path $coreDestination "SOL.exe"
