@@ -4,13 +4,13 @@ SOL-Full es la distribución Windows probada de **SOL Core + plugins oficiales d
 
 Este repositorio no duplica los árboles fuente de cada proyecto. En cambio, fija artefactos de release conocidos, verifica sus SHA-256, los organiza en un único bundle y ejecuta CI de integración.
 
-## Incluido en `0.13.0-preview.14`
+## Incluido en `0.13.0-preview.15`
 
 | Componente | Versión / tag | Artefacto |
 | --- | --- | --- |
-| SOL Core | `main@2425977` / `sol-windows-latest` | `SOL-Core-Windows.zip` |
+| SOL Core | `main@c3fc968` / `sol-windows-latest` | `SOL-Core-Windows.zip` |
 | Nexo · WhatsApp | `0.11.2` / `sol-plugin-latest` | `Nexo.solplugin` |
-| Home Assistant | `0.3.25` / `home-assistant-plugin-latest` | `HomeAssistant.solplugin` |
+| Home Assistant | `0.3.26` / `home-assistant-plugin-latest` | `HomeAssistant.solplugin` |
 | Codex Audio Remote | `1.5.2` / `sol-plugin-latest` | `CodexAudioRemote.solplugin` |
 
 La combinación exacta de repositorio, release, asset id, commit fuente y SHA-256 está en [`manifest/sol-full.json`](manifest/sol-full.json).
@@ -23,7 +23,8 @@ Este preview incorpora en SOL Core las capas ya mergeadas para futuras integraci
 - estado portable persistente fuera del directorio de la versión;
 - `connections.v1` para cuentas externas estándar;
 - migrations automáticas serializadas con PostgreSQL advisory lock;
-- `credentials.v1` con Vault AES-256-GCM, ciphertext en PostgreSQL/Neon y clave maestra sólo en `SOL_DATA_DIR/vault.key`.
+- `credentials.v1` con Vault AES-256-GCM, ciphertext en PostgreSQL/Neon y clave maestra sólo en `SOL_DATA_DIR/vault.key`;
+- selects dinámicos para settings de plugins: el Core puede cargar opciones desde un endpoint loopback del propio plugin y renderizarlas con la UI existente.
 
 La actualización de bases legacy mantiene `0020_plugin_runtime_capabilities.sql` idempotente incluso si quedó parcialmente aplicada antes del ledger `schema_migrations`. Las tablas e índices existentes se conservan y sólo se crean los objetos faltantes. También se mantiene `sslmode=verify-full` explícito para el driver PostgreSQL.
 
@@ -33,14 +34,14 @@ OAuth universal todavía no forma parte de este bundle: permanece en desarrollo 
 
 Nexo 0.11.2 mantiene WhatsApp como input/output de SOL, media bidireccional, historial autorizado por miembro y acceso a herramientas registradas en SOL.
 
-Home Assistant 0.3.25 incorpora control Android TV directo mediante Home Assistant Remote, reproducción nativa de Stremio, cuenta/biblioteca de Stremio, resolución de episodios y perfiles aislados de proveedores. La clasificación de audiencia distingue `kids` y `family`: puede usar decisiones explícitas de Codex, títulos forzados, ratings/certificaciones, géneros y una heurística conservadora; las decisiones se cachean por Stremio ID. Kids y Family reutilizan el proveedor familiar español/latino fail-closed. El control de TV no depende de Android TV Satellite.
+Home Assistant 0.3.26 mantiene control Android TV directo mediante Home Assistant Remote, reproducción nativa de Stremio, cuenta/biblioteca de Stremio, resolución de episodios y perfiles aislados de proveedores. La clasificación distingue `kids` y `family`. El proveedor Kids/Family puede seleccionarse desde un desplegable que carga únicamente los addons con rol `stream` instalados en la cuenta Stremio vinculada: SOL guarda sólo el ID del addon, la URL privada permanece dentro del plugin, y luego sigue aplicando el filtro obligatorio Español/Latino y el comportamiento fail-closed. El manifest manual continúa disponible como fallback. El control de TV no depende de Android TV Satellite.
 
 Codex Audio Remote 1.5.2 mantiene Realtime/WebRTC, control de calidad de audio, reconexión de transporte y delega herramientas/contexto de SOL en lugar de mantener integraciones paralelas.
 
 ## Bundle generado
 
 ```text
-SOL-Full-Windows-0.13.0-preview.14.zip
+SOL-Full-Windows-0.13.0-preview.15.zip
 ├─ SOL/
 ├─ plugins/
 │  ├─ Nexo.solplugin
@@ -77,7 +78,7 @@ Requisitos: Windows PowerShell 7+ y acceso de red a GitHub.
 Salida:
 
 ```text
-dist/SOL-Full-Windows-0.13.0-preview.14.zip
+dist/SOL-Full-Windows-0.13.0-preview.15.zip
 dist/SHA256SUMS.txt
 ```
 
@@ -90,6 +91,7 @@ El build aborta si un asset descargado no coincide con el SHA-256 fijado, si un 
 3. El launcher reutiliza el estado persistente existente de SOL; no copies manualmente `.env` ni `.sol` entre versiones.
 4. Para instalaciones nuevas, abrí **Sistema → Plugins** e instalá los `.solplugin` de `plugins/`.
 5. Para instalaciones existentes, usá la actualización in-place de plugins cuando corresponda; settings y `plugin-data` permanecen fuera del paquete.
+6. Para usar el selector dinámico Kids/Family, primero guardá la cuenta Stremio vinculada; después reabrí **Configurar** y elegí el addon español/latino en el desplegable.
 
 No se incluyen secretos de usuario en el bundle.
 
