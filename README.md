@@ -81,7 +81,7 @@ dist/SOL-Full-Windows-0.13.0-preview.13.zip
 dist/SHA256SUMS.txt
 ```
 
-El build aborta si un asset descargado no coincide con el SHA-256 fijado, si un `.solplugin` no contiene exactamente un `sol-plugin.json` en su raíz, si supera los **2000 ZIP entries** o los **128 MiB descomprimidos** permitidos por SOL, si SOL Core no produce `SOL/SOL.exe`, o si un plugin requiere una capacidad que el SOL Core empaquetado no ofrece.
+El build aborta si un asset descargado no coincide con el SHA-256 fijado, si un `.solplugin` no contiene exactamente un `sol-plugin.json` en su raíz, si supera las **2000 ZIP entries**, los **256 MiB comprimidos** o los **512 MiB descomprimidos** admitidos por el SOL Core actual, si SOL Core no produce `SOL/SOL.exe`, o si un plugin requiere una capacidad que el SOL Core empaquetado no ofrece.
 
 ## Instalación / actualización
 
