@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "bundle": {
     "name": "SOL-Full",
-    "version": "0.13.0-preview.12",
+    "version": "0.13.0-preview.13",
     "platform": "windows-x64",
     "strategy": "pinned-release-artifacts"
   },
@@ -37,13 +37,13 @@
       "id": "home-assistant",
       "name": "Home Assistant",
       "kind": "plugin",
-      "version": "0.2.0",
+      "version": "0.3.24",
       "repository": "diegocesaretti/SOL",
       "releaseTag": "home-assistant-plugin-latest",
       "asset": "HomeAssistant.solplugin",
-      "assetId": 551589153,
-      "sourceCommit": "e357c0b2d9c5060e6a401a7b0dd18fc61360ef9f",
-      "sha256": "76ac114a4a5831fb598552279784bc8ef52b8dbcfc48d6e33d3fcf958ee36b84",
+      "assetId": 560326592,
+      "sourceCommit": "2425977db44eeb1605b6699b57cb0467d2f962b2",
+      "sha256": "6fdabe9cd369c43d4d378e2b5e65e8580a264d5af9e6953c77ebd8ee8e848d1e",
       "destination": "plugins"
     },
     {
