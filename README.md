@@ -10,7 +10,7 @@ Este repositorio no duplica los árboles fuente de cada proyecto. En cambio, fij
 | --- | --- | --- |
 | SOL Core | `main@5e8cbbf` / `sol-windows-latest` | `SOL-Core-Windows.zip` |
 | Nexo · WhatsApp | `0.11.2` / `sol-plugin-latest` | `Nexo.solplugin` |
-| Home Assistant | `0.3.27` / `home-assistant-plugin-latest` | `HomeAssistant.solplugin` |
+| Home Assistant | `0.3.40` / `home-assistant-plugin-latest` | `HomeAssistant.solplugin` |
 | Codex Audio Remote | `1.5.2` / `sol-plugin-latest` | `CodexAudioRemote.solplugin` |
 
 La combinación exacta de repositorio, release, asset id, commit fuente y SHA-256 está en [`manifest/sol-full.json`](manifest/sol-full.json).
@@ -40,7 +40,7 @@ OAuth universal todavía no forma parte de este bundle: permanece en desarrollo 
 
 Nexo 0.11.2 mantiene WhatsApp como input/output de SOL, media bidireccional, historial autorizado por miembro y acceso a herramientas registradas en SOL.
 
-Home Assistant 0.3.27 mantiene control Android TV exclusivamente mediante Home Assistant Remote, reproducción nativa de Stremio, cuenta/biblioteca de Stremio, resolución de episodios y perfiles aislados de proveedores. La clasificación distingue `kids` y `family`. El proveedor Kids/Family puede seleccionarse desde un desplegable que carga únicamente los addons con rol `stream` instalados en la cuenta Stremio vinculada: SOL guarda sólo el ID del addon y la URL privada permanece dentro del plugin.
+Home Assistant 0.3.40 mantiene control Android TV exclusivamente mediante Home Assistant Remote, reproducción nativa de Stremio, cuenta/biblioteca de Stremio, resolución de episodios y perfiles aislados de proveedores. La clasificación distingue `kids` y `family`. El proveedor Kids/Family puede seleccionarse desde un desplegable que carga únicamente los addons con rol `stream` instalados en la cuenta Stremio vinculada: SOL guarda sólo el ID del addon y la URL privada permanece dentro del plugin.
 
 La reproducción ahora también puede seleccionar por índice el stream exacto que SOL eligió. SOL combina el orden real de addons de la cuenta con `providerIndex`, reconstruye la fila nativa de Stremio y envía `DPAD_DOWN` la cantidad necesaria seguida de `DPAD_CENTER`, siempre mediante Home Assistant `remote.send_command`. Si se pidió o seleccionó Español/Latino y el índice no puede probarse —por ejemplo, porque un proveedor anterior falla o la fila es ambigua— el flujo falla cerrado y no confirma el primer torrent por accidente. Android TV Satellite no participa en este flujo.
 
