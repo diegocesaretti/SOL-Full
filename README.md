@@ -4,16 +4,22 @@ SOL-Full es la distribución Windows probada de **SOL Core + plugins oficiales d
 
 Este repositorio no duplica los árboles fuente de cada proyecto. En cambio, fija artefactos de release conocidos, verifica sus SHA-256, los organiza en un único bundle y ejecuta CI de integración.
 
-## Incluido en `0.13.0-preview.16`
+## Incluido en `0.13.0-preview.17`
 
 | Componente | Versión / tag | Artefacto |
 | --- | --- | --- |
-| SOL Core | `main@88a1140` / `sol-windows-latest` | `SOL-Core-Windows.zip` |
+| SOL Core | `main@5e8cbbf` / `sol-windows-latest` | `SOL-Core-Windows.zip` |
 | Nexo · WhatsApp | `0.11.2` / `sol-plugin-latest` | `Nexo.solplugin` |
-| Home Assistant | `0.3.27` / `home-assistant-plugin-latest` | `HomeAssistant.solplugin` |
-| Codex Audio Remote | `1.5.2` / `sol-plugin-latest` | `CodexAudioRemote.solplugin` |
+| Home Assistant | `0.3.40` / `home-assistant-plugin-latest` | `HomeAssistant.solplugin` |
+| Codex Audio Remote | `1.5.3` / `sol-plugin-latest` | `CodexAudioRemote.solplugin` |
 
 La combinación exacta de repositorio, release, asset id, commit fuente y SHA-256 está en [`manifest/sol-full.json`](manifest/sol-full.json).
+
+### Base de datos local-first y fallback de Neon
+
+Este preview incorpora PostgreSQL embebido persistente para SOL Full. Cuando `DATABASE_URL` apunta a Neon, SOL entra automáticamente en modo híbrido: el runtime, las migraciones y `LISTEN/NOTIFY` trabajan contra la base local; Neon queda como réplica cloud sincronizada por lotes. Si Neon está sin cuota o fuera de línea, SOL puede seguir iniciando y trabajando localmente.
+
+La primera vez que Neon está disponible, SOL siembra la copia local desde la base cloud. Si Neon ya está caído antes de esa primera siembra, SOL usa el estado `unseeded_offline` y no sobrescribe automáticamente la base remota cuando vuelva, evitando pérdida de historial. El estado de la base local, Neon y la sincronización se expone en `/health` y `/v1/system`.
 
 ### Fundación de plataforma
 
@@ -34,16 +40,16 @@ OAuth universal todavía no forma parte de este bundle: permanece en desarrollo 
 
 Nexo 0.11.2 mantiene WhatsApp como input/output de SOL, media bidireccional, historial autorizado por miembro y acceso a herramientas registradas en SOL.
 
-Home Assistant 0.3.27 mantiene control Android TV exclusivamente mediante Home Assistant Remote, reproducción nativa de Stremio, cuenta/biblioteca de Stremio, resolución de episodios y perfiles aislados de proveedores. La clasificación distingue `kids` y `family`. El proveedor Kids/Family puede seleccionarse desde un desplegable que carga únicamente los addons con rol `stream` instalados en la cuenta Stremio vinculada: SOL guarda sólo el ID del addon y la URL privada permanece dentro del plugin.
+Home Assistant 0.3.40 mantiene control Android TV exclusivamente mediante Home Assistant Remote, reproducción nativa de Stremio, cuenta/biblioteca de Stremio, resolución de episodios y perfiles aislados de proveedores. La clasificación distingue `kids` y `family`. El proveedor Kids/Family puede seleccionarse desde un desplegable que carga únicamente los addons con rol `stream` instalados en la cuenta Stremio vinculada: SOL guarda sólo el ID del addon y la URL privada permanece dentro del plugin.
 
 La reproducción ahora también puede seleccionar por índice el stream exacto que SOL eligió. SOL combina el orden real de addons de la cuenta con `providerIndex`, reconstruye la fila nativa de Stremio y envía `DPAD_DOWN` la cantidad necesaria seguida de `DPAD_CENTER`, siempre mediante Home Assistant `remote.send_command`. Si se pidió o seleccionó Español/Latino y el índice no puede probarse —por ejemplo, porque un proveedor anterior falla o la fila es ambigua— el flujo falla cerrado y no confirma el primer torrent por accidente. Android TV Satellite no participa en este flujo.
 
-Codex Audio Remote 1.5.2 mantiene Realtime/WebRTC, control de calidad de audio, reconexión de transporte y delega herramientas/contexto de SOL en lugar de mantener integraciones paralelas.
+Codex Audio Remote 1.5.3 mantiene Realtime/WebRTC, control de calidad de audio, reconexión de transporte y delega herramientas/contexto de SOL en lugar de mantener integraciones paralelas.
 
 ## Bundle generado
 
 ```text
-SOL-Full-Windows-0.13.0-preview.16.zip
+SOL-Full-Windows-0.13.0-preview.17.zip
 ├─ SOL/
 ├─ plugins/
 │  ├─ Nexo.solplugin
@@ -80,7 +86,7 @@ Requisitos: Windows PowerShell 7+ y acceso de red a GitHub.
 Salida:
 
 ```text
-dist/SOL-Full-Windows-0.13.0-preview.16.zip
+dist/SOL-Full-Windows-0.13.0-preview.17.zip
 dist/SHA256SUMS.txt
 ```
 
