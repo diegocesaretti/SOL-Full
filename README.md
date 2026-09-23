@@ -4,16 +4,22 @@ SOL-Full es la distribución Windows probada de **SOL Core + plugins oficiales d
 
 Este repositorio no duplica los árboles fuente de cada proyecto. En cambio, fija artefactos de release conocidos, verifica sus SHA-256, los organiza en un único bundle y ejecuta CI de integración.
 
-## Incluido en `0.13.0-preview.16`
+## Incluido en `0.13.0-preview.17`
 
 | Componente | Versión / tag | Artefacto |
 | --- | --- | --- |
-| SOL Core | `main@88a1140` / `sol-windows-latest` | `SOL-Core-Windows.zip` |
+| SOL Core | `main@5e8cbbf` / `sol-windows-latest` | `SOL-Core-Windows.zip` |
 | Nexo · WhatsApp | `0.11.2` / `sol-plugin-latest` | `Nexo.solplugin` |
 | Home Assistant | `0.3.27` / `home-assistant-plugin-latest` | `HomeAssistant.solplugin` |
 | Codex Audio Remote | `1.5.2` / `sol-plugin-latest` | `CodexAudioRemote.solplugin` |
 
 La combinación exacta de repositorio, release, asset id, commit fuente y SHA-256 está en [`manifest/sol-full.json`](manifest/sol-full.json).
+
+### Base de datos local-first y fallback de Neon
+
+Este preview incorpora PostgreSQL embebido persistente para SOL Full. Cuando `DATABASE_URL` apunta a Neon, SOL entra automáticamente en modo híbrido: el runtime, las migraciones y `LISTEN/NOTIFY` trabajan contra la base local; Neon queda como réplica cloud sincronizada por lotes. Si Neon está sin cuota o fuera de línea, SOL puede seguir iniciando y trabajando localmente.
+
+La primera vez que Neon está disponible, SOL siembra la copia local desde la base cloud. Si Neon ya está caído antes de esa primera siembra, SOL usa el estado `unseeded_offline` y no sobrescribe automáticamente la base remota cuando vuelva, evitando pérdida de historial. El estado de la base local, Neon y la sincronización se expone en `/health` y `/v1/system`.
 
 ### Fundación de plataforma
 
@@ -43,7 +49,7 @@ Codex Audio Remote 1.5.2 mantiene Realtime/WebRTC, control de calidad de audio, 
 ## Bundle generado
 
 ```text
-SOL-Full-Windows-0.13.0-preview.16.zip
+SOL-Full-Windows-0.13.0-preview.17.zip
 ├─ SOL/
 ├─ plugins/
 │  ├─ Nexo.solplugin
@@ -80,7 +86,7 @@ Requisitos: Windows PowerShell 7+ y acceso de red a GitHub.
 Salida:
 
 ```text
-dist/SOL-Full-Windows-0.13.0-preview.16.zip
+dist/SOL-Full-Windows-0.13.0-preview.17.zip
 dist/SHA256SUMS.txt
 ```
 
