@@ -10,7 +10,7 @@ Este repositorio no duplica los árboles fuente de cada proyecto. En cambio, fij
 | --- | --- | --- |
 | SOL Core | `main@5e8cbbf` / `sol-windows-latest` | `SOL-Core-Windows.zip` |
 | Nexo · WhatsApp | `0.11.2` / `sol-plugin-latest` | `Nexo.solplugin` |
-| Home Assistant | `0.3.27` / `home-assistant-plugin-latest` | `HomeAssistant.solplugin` |
+| Home Assistant | `0.3.40` / `home-assistant-plugin-latest` | `HomeAssistant.solplugin` |
 | Codex Audio Remote | `1.5.2` / `sol-plugin-latest` | `CodexAudioRemote.solplugin` |
 
 La combinación exacta de repositorio, release, asset id, commit fuente y SHA-256 está en [`manifest/sol-full.json`](manifest/sol-full.json).
