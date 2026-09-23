@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "bundle": {
     "name": "SOL-Full",
-    "version": "0.13.0-preview.16",
+    "version": "0.13.0-preview.17",
     "platform": "windows-x64",
     "strategy": "pinned-release-artifacts"
   },
@@ -11,13 +11,13 @@
       "id": "sol-core",
       "name": "SOL Core",
       "kind": "core",
-      "version": "main@88a1140",
+      "version": "main@5e8cbbf",
       "repository": "diegocesaretti/SOL",
       "releaseTag": "sol-windows-latest",
       "asset": "SOL-Core-Windows.zip",
-      "assetId": 561584235,
-      "sourceCommit": "88a1140867ac58a574610ccf813cab9121555d1b",
-      "sha256": "5737f50fae2165dcd3993ca17ba8a951272f4ebfe0e7a578fd02cc2c7712db6a",
+      "assetId": 584622040,
+      "sourceCommit": "5e8cbbf53a3e4f5e0f7cad90082fcafea7962aaf",
+      "sha256": "ea4b1ae9b046b860cd255a7c30e5294e62ed18df1da897094db6f727550c39fc",
       "destination": "SOL"
     },
     {
@@ -37,26 +37,26 @@
       "id": "home-assistant",
       "name": "Home Assistant",
       "kind": "plugin",
-      "version": "0.3.27",
+      "version": "0.3.40",
       "repository": "diegocesaretti/SOL",
       "releaseTag": "home-assistant-plugin-latest",
       "asset": "HomeAssistant.solplugin",
-      "assetId": 561581034,
-      "sourceCommit": "88a1140867ac58a574610ccf813cab9121555d1b",
-      "sha256": "eca977d47d68db84add10c8ffb18a20d1ed4e412544cb2bfa98456b2587dac8a",
+      "assetId": 568038539,
+      "sourceCommit": "53706124410de30e49a33117436792bef48c25f4",
+      "sha256": "5a3f882ab737301255200355612e0da34c0cd6396db90bc3ae13690bd1c3f0e9",
       "destination": "plugins"
     },
     {
       "id": "codex-audio-remote",
       "name": "Codex Audio Remote",
       "kind": "plugin",
-      "version": "1.5.2",
+      "version": "1.5.3",
       "repository": "diegocesaretti/Codex-audio-remote",
       "releaseTag": "sol-plugin-latest",
       "asset": "CodexAudioRemote.solplugin",
-      "assetId": 553571270,
-      "sourceCommit": "efb123d6ed97f832be97f6ec4cd9429282a02153",
-      "sha256": "0610a442aba01549c8747e410a1faf16c80388d36a06ba1b8d1a1838bdc9310a",
+      "assetId": 566717154,
+      "sourceCommit": "48ac8be5945dac3d1c8b4fd4ea9654684848bc01",
+      "sha256": "7033654a8cf337a2895f7830b169c73c01d587f0a0a8521b6d5c5361bbf04ef5",
       "destination": "plugins"
     }
   ]
