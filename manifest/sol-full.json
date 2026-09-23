@@ -37,13 +37,13 @@
       "id": "home-assistant",
       "name": "Home Assistant",
       "kind": "plugin",
-      "version": "0.3.27",
+      "version": "0.3.40",
       "repository": "diegocesaretti/SOL",
       "releaseTag": "home-assistant-plugin-latest",
       "asset": "HomeAssistant.solplugin",
-      "assetId": 561581034,
-      "sourceCommit": "88a1140867ac58a574610ccf813cab9121555d1b",
-      "sha256": "eca977d47d68db84add10c8ffb18a20d1ed4e412544cb2bfa98456b2587dac8a",
+      "assetId": 568038539,
+      "sourceCommit": "53706124410de30e49a33117436792bef48c25f4",
+      "sha256": "5a3f882ab737301255200355612e0da34c0cd6396db90bc3ae13690bd1c3f0e9",
       "destination": "plugins"
     },
     {
