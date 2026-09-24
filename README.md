@@ -4,11 +4,11 @@ SOL-Full es la distribución Windows probada de **SOL Core + plugins oficiales d
 
 Este repositorio no duplica los árboles fuente de cada proyecto. En cambio, fija artefactos de release conocidos, verifica sus SHA-256, los organiza en un único bundle y ejecuta CI de integración.
 
-## Incluido en `0.13.0-preview.20`
+## Incluido en `0.13.0-preview.21`
 
 | Componente | Versión / tag | Artefacto |
 | --- | --- | --- |
-| SOL Core | `main@50814c3` / `sol-windows-latest` | `SOL-Core-Windows.zip` |
+| SOL Core | `main@1376672` / `sol-windows-latest` | `SOL-Core-Windows.zip` |
 | Nexo · WhatsApp | `0.11.2` / `sol-plugin-latest` | `Nexo.solplugin` |
 | Home Assistant | `0.3.40` / `home-assistant-plugin-latest` | `HomeAssistant.solplugin` |
 | Codex Audio Remote | `1.5.3` / `sol-plugin-latest` | `CodexAudioRemote.solplugin` |
@@ -17,7 +17,7 @@ La combinación exacta de repositorio, release, asset id, commit fuente y SHA-25
 
 ### Fundación de plataforma
 
-Este preview agrega a SOL Full un modo de base de datos **local-first** para instalaciones con Neon: PostgreSQL embebido y persistente en Windows, arranque aun cuando Neon esté sin cuota/offline, `LISTEN/NOTIFY` local y sincronización controlada con la nube. En Windows, SOL inicia el PostgreSQL embebido mediante `pg_ctl`, que crea el token restringido requerido por PostgreSQL incluso si SOL fue abierto con permisos elevados. El lifecycle de `pg_ctl` se resuelve por la salida real del proceso y no por el cierre de pipes heredados por `postgres.exe`, evitando que el arranque de SOL quede bloqueado después de iniciar la base. También recupera clusters que quedaron inicializados por un primer arranque fallido verificando y creando la base local `sol` cuando falta. Mientras la réplica local todavía no fue sembrada desde Neon, SOL muestra un estado protegido de recuperación en lugar del onboarding, bloquea la creación accidental de un hogar nuevo y reintenta automáticamente la copia Neon → local cada minuto, con opción de reintento manual. Neon deja de ser un punto único de falla y ya no necesita una conexión remota permanente para el outbox.
+Este preview agrega a SOL Full un modo de base de datos **local-first** para instalaciones con Neon: PostgreSQL embebido y persistente en Windows, arranque aun cuando Neon esté sin cuota/offline, `LISTEN/NOTIFY` local y sincronización controlada con la nube. En Windows, SOL inicia el PostgreSQL embebido mediante `pg_ctl`, que crea el token restringido requerido por PostgreSQL incluso si SOL fue abierto con permisos elevados. El lifecycle de `pg_ctl` se resuelve por la salida real del proceso y no por el cierre de pipes heredados por `postgres.exe`, evitando que el arranque de SOL quede bloqueado después de iniciar la base. También recupera clusters que quedaron inicializados por un primer arranque fallido verificando y creando la base local `sol` cuando falta. Mientras la réplica local todavía no fue sembrada desde Neon, SOL muestra un estado protegido de recuperación en lugar del onboarding, bloquea la creación accidental de un hogar nuevo y reintenta automáticamente la copia Neon → local cada 15 minutos, con opción de reintento manual inmediato. Los health checks y el icono de bandeja consultan sólo PostgreSQL local: no hacen pings a Neon. Una instalación ya sembrada tampoco despierta Neon al arrancar; la sincronización cloud normal queda en lotes cada 6 horas, con una única conexión corta que se libera al quedar ociosa. Neon deja de ser un punto único de falla y ya no necesita una conexión remota permanente para el outbox.
 
 Este preview incorpora en SOL Core las capas ya mergeadas para futuras integraciones sin migrar ni alterar forzosamente Nexo, Home Assistant o Audio Remote:
 
@@ -45,7 +45,7 @@ Codex Audio Remote 1.5.3 mantiene Realtime/WebRTC, control de calidad de audio, 
 ## Bundle generado
 
 ```text
-SOL-Full-Windows-0.13.0-preview.20.zip
+SOL-Full-Windows-0.13.0-preview.21.zip
 ├─ SOL/
 ├─ plugins/
 │  ├─ Nexo.solplugin
@@ -82,7 +82,7 @@ Requisitos: Windows PowerShell 7+ y acceso de red a GitHub.
 Salida:
 
 ```text
-dist/SOL-Full-Windows-0.13.0-preview.20.zip
+dist/SOL-Full-Windows-0.13.0-preview.21.zip
 dist/SHA256SUMS.txt
 ```
 
