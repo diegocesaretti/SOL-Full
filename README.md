@@ -4,7 +4,7 @@ SOL-Full es la distribución Windows probada de **SOL Core + plugins oficiales d
 
 Este repositorio no duplica los árboles fuente de cada proyecto. En cambio, fija artefactos de release conocidos, verifica sus SHA-256, los organiza en un único bundle y ejecuta CI de integración.
 
-## Incluido en `0.13.0-preview.22`
+## Incluido en `0.13.0-preview.23`
 
 | Componente | Versión / tag | Artefacto |
 | --- | --- | --- |
@@ -58,7 +58,7 @@ Codex Audio Remote 1.5.3 mantiene Realtime/WebRTC, control de calidad de audio, 
 ## Bundle generado
 
 ```text
-SOL-Full-Windows-0.13.0-preview.22.zip
+SOL-Full-Windows-0.13.0-preview.23.zip
 ├─ SOL/
 ├─ plugins/
 │  ├─ Nexo.solplugin
@@ -95,7 +95,7 @@ Requisitos: Windows PowerShell 7+ y acceso de red a GitHub.
 Salida:
 
 ```text
-dist/SOL-Full-Windows-0.13.0-preview.22.zip
+dist/SOL-Full-Windows-0.13.0-preview.23.zip
 dist/SHA256SUMS.txt
 ```
 
