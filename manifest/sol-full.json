@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "bundle": {
     "name": "SOL-Full",
-    "version": "0.13.0-preview.22",
+    "version": "0.13.0-preview.23",
     "platform": "windows-x64",
     "strategy": "pinned-release-artifacts"
   },
@@ -11,13 +11,13 @@
       "id": "sol-core",
       "name": "SOL Core",
       "kind": "core",
-      "version": "0.15.20",
+      "version": "0.15.21",
       "repository": "diegocesaretti/SOL",
       "releaseTag": "sol-windows-latest",
       "asset": "SOL-Core-Windows.zip",
-      "assetId": 598614229,
-      "sourceCommit": "43714d645a9738d07756254f0d67201e6c19ba10",
-      "sha256": "65806f79131ad710faad63563719355e806a0e64da6072b46462ec47830cd0c4",
+      "assetId": 599056048,
+      "sourceCommit": "2763673312645379f11dbfb78930aeed3e975ab9",
+      "sha256": "13b9ecded964a3edfca706f949c499991de6bec45118eaf626d04abc53f5c235",
       "destination": "SOL"
     },
     {
@@ -41,9 +41,9 @@
       "repository": "diegocesaretti/SOL",
       "releaseTag": "home-assistant-plugin-latest",
       "asset": "HomeAssistant.solplugin",
-      "assetId": 598609688,
-      "sourceCommit": "43714d645a9738d07756254f0d67201e6c19ba10",
-      "sha256": "08901ba19ad5f30436443a71c8e0912f3572780dcd04c2d882859df648740361",
+      "assetId": 599053113,
+      "sourceCommit": "2763673312645379f11dbfb78930aeed3e975ab9",
+      "sha256": "a55a61a11fb95008c89a4936e92c76375cb13f6e317a0b83fd5b7814f8efdc20",
       "destination": "plugins"
     },
     {
