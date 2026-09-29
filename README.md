@@ -4,16 +4,29 @@ SOL-Full es la distribución Windows probada de **SOL Core + plugins oficiales d
 
 Este repositorio no duplica los árboles fuente de cada proyecto. En cambio, fija artefactos de release conocidos, verifica sus SHA-256, los organiza en un único bundle y ejecuta CI de integración.
 
-## Incluido en `0.13.0-preview.21`
+## Incluido en `0.13.0-preview.22`
 
 | Componente | Versión / tag | Artefacto |
 | --- | --- | --- |
-| SOL Core | `main@1376672` / `sol-windows-latest` | `SOL-Core-Windows.zip` |
+| SOL Core | `0.15.20` (`43714d6`) / `sol-windows-latest` | `SOL-Core-Windows.zip` |
 | Nexo · WhatsApp | `0.11.2` / `sol-plugin-latest` | `Nexo.solplugin` |
 | Home Assistant | `0.3.40` / `home-assistant-plugin-latest` | `HomeAssistant.solplugin` |
 | Codex Audio Remote | `1.5.3` / `sol-plugin-latest` | `CodexAudioRemote.solplugin` |
 
 La combinación exacta de repositorio, release, asset id, commit fuente y SHA-256 está en [`manifest/sol-full.json`](manifest/sol-full.json).
+
+### ChatGPT ↔ SOL
+
+Este preview incorpora el bridge MCP de SOL 0.15.20 para usar SOL como backend privado de clientes MCP y dejar preparada la conexión con ChatGPT mediante OpenAI Secure MCP Tunnel, sin publicar SOL Core ni Home Assistant en Internet.
+
+- SOL pasa a identificarse como servidor MCP y expone `sol_status`; `nexo_status` queda como alias compatible.
+- Los nuevos accesos usan tokens `sol_mcp_*`, con scopes separados `read`, `submit` y `actions`.
+- El bundle Windows incluye `SOL/scripts/windows/sol-mcp.ps1`, que arranca el MCP con el runtime portable sin depender de pnpm ni del repo fuente.
+- Las herramientas de plugins siguen entrando por el Tool Registry de SOL. Home Assistant conserva sus credenciales y callbacks en loopback; consultas usan `read` y las acciones sólo aparecen con `actions` y mantienen confirmación explícita.
+- La UI **SOL → MCP** genera la configuración local y el flujo de Secure MCP Tunnel.
+
+La disponibilidad de MCP personalizados dentro de ChatGPT depende del plan/superficie de ChatGPT; el bridge queda incluido en SOL-Full independientemente de esa habilitación.
+
 
 ### Fundación de plataforma
 
@@ -45,7 +58,7 @@ Codex Audio Remote 1.5.3 mantiene Realtime/WebRTC, control de calidad de audio, 
 ## Bundle generado
 
 ```text
-SOL-Full-Windows-0.13.0-preview.21.zip
+SOL-Full-Windows-0.13.0-preview.22.zip
 ├─ SOL/
 ├─ plugins/
 │  ├─ Nexo.solplugin
@@ -82,7 +95,7 @@ Requisitos: Windows PowerShell 7+ y acceso de red a GitHub.
 Salida:
 
 ```text
-dist/SOL-Full-Windows-0.13.0-preview.21.zip
+dist/SOL-Full-Windows-0.13.0-preview.22.zip
 dist/SHA256SUMS.txt
 ```
 
