@@ -27,9 +27,6 @@ Este preview incorpora el bridge MCP de SOL 0.15.20 para usar SOL como backend p
 
 La disponibilidad de MCP personalizados dentro de ChatGPT depende del plan/superficie de ChatGPT; el bridge queda incluido en SOL-Full independientemente de esa habilitación.
 
-### ChatGPT / MCP
-
-Este preview fija SOL Core 0.15.20, que incorpora el bridge oficial de SOL para clientes MCP como ChatGPT y Codex. El MCP queda local por `stdio`, usa tokens por miembro con scopes `read`, `submit` y `actions`, carga dinámicamente las tools de plugins —incluido Home Assistant— y agrega un launcher portable `SOL/scripts/windows/sol-mcp.ps1`. También queda preparado para OpenAI Secure MCP Tunnel sin publicar SOL ni Home Assistant directamente a Internet.
 
 ### Fundación de plataforma
 
