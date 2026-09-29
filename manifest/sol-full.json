@@ -16,7 +16,7 @@
       "releaseTag": "sol-windows-latest",
       "asset": "SOL-Core-Windows.zip",
       "assetId": 598614229,
-      "sourceCommit": "2763673312645379f11dbfb78930aeed3e975ab9",
+      "sourceCommit": "43714d645a9738d07756254f0d67201e6c19ba10",
       "sha256": "65806f79131ad710faad63563719355e806a0e64da6072b46462ec47830cd0c4",
       "destination": "SOL"
     },
@@ -42,7 +42,7 @@
       "releaseTag": "home-assistant-plugin-latest",
       "asset": "HomeAssistant.solplugin",
       "assetId": 599053113,
-      "sourceCommit": "43714d645a9738d07756254f0d67201e6c19ba10",
+      "sourceCommit": "2763673312645379f11dbfb78930aeed3e975ab9",
       "sha256": "a55a61a11fb95008c89a4936e92c76375cb13f6e317a0b83fd5b7814f8efdc20",
       "destination": "plugins"
     },
