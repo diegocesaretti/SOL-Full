@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "bundle": {
     "name": "SOL-Full",
-    "version": "0.13.0-preview.24",
+    "version": "0.13.0-preview.25",
     "platform": "windows-x64",
     "strategy": "pinned-release-artifacts"
   },
@@ -67,9 +67,9 @@
       "repository": "diegocesaretti/SOL",
       "releaseTag": "bambuddy-plugin-latest",
       "asset": "Bambuddy.solplugin",
-      "assetId": 608511349,
-      "sourceCommit": "342f43164eb9b97549ae2e050c9c2d1aaaad5430",
-      "sha256": "26da25c0bb57bfe50bd1f4dadda056ce7e32cc0904366611d160a91339b85e00",
+      "assetId": 608518595,
+      "sourceCommit": "e47061881bf74cda7ee02f66f5cf9ca76ea53ac6",
+      "sha256": "e68b97658fa2bc711ab938b215f0b769f69b39d0da5bb723f00698f6f2c4d140",
       "destination": "plugins"
     }
   ]
