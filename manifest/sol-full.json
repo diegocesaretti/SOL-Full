@@ -15,9 +15,9 @@
       "repository": "diegocesaretti/SOL",
       "releaseTag": "sol-windows-latest",
       "asset": "SOL-Core-Windows.zip",
-      "assetId": 608520702,
-      "sourceCommit": "e47061881bf74cda7ee02f66f5cf9ca76ea53ac6",
-      "sha256": "ea4755e56a0b216ac702a88d30658741e55d8f90943428e9fefc7a2aa2691c94",
+      "assetId": 608662107,
+      "sourceCommit": "f72bfbc7b0f3f7a8947a5bc1b2a67f5ad5185594",
+      "sha256": "ca606f2cfdac465d6ea77f2fe824e2649a7b5081daef04d5527ccab826bf2ab8",
       "destination": "SOL"
     },
     {
