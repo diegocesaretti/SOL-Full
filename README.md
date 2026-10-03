@@ -4,7 +4,7 @@ SOL-Full es la distribución Windows probada de **SOL Core + plugins oficiales d
 
 Este repositorio no duplica los árboles fuente de cada proyecto. En cambio, fija artefactos de release conocidos, verifica sus SHA-256, los organiza en un único bundle y ejecuta CI de integración.
 
-## Incluido en `0.13.0-preview.23`
+## Incluido en `0.13.0-preview.24`
 
 | Componente | Versión / tag | Artefacto |
 | --- | --- | --- |
@@ -12,6 +12,7 @@ Este repositorio no duplica los árboles fuente de cada proyecto. En cambio, fij
 | Nexo · WhatsApp | `0.11.2` / `sol-plugin-latest` | `Nexo.solplugin` |
 | Home Assistant | `0.3.40` / `home-assistant-plugin-latest` | `HomeAssistant.solplugin` |
 | Codex Audio Remote | `1.5.3` / `sol-plugin-latest` | `CodexAudioRemote.solplugin` |
+| Bambuddy | `0.2.0` / `bambuddy-plugin-latest` | `Bambuddy.solplugin` |
 
 La combinación exacta de repositorio, release, asset id, commit fuente y SHA-256 está en [`manifest/sol-full.json`](manifest/sol-full.json).
 
@@ -55,15 +56,18 @@ La reproducción ahora también puede seleccionar por índice el stream exacto q
 
 Codex Audio Remote 1.5.3 mantiene Realtime/WebRTC, control de calidad de audio, reconexión de transporte y delega herramientas/contexto de SOL en lugar de mantener integraciones paralelas.
 
+Bambuddy 0.2.0 agrega control LAN/Developer Mode de impresoras Bambu, listado persistente de archivos SD, impresión directa de 3MF ya presentes en la tarjeta y reparación idempotente de los parches de compatibilidad después de actualizaciones de Bambuddy.
+
 ## Bundle generado
 
 ```text
-SOL-Full-Windows-0.13.0-preview.23.zip
+SOL-Full-Windows-0.13.0-preview.24.zip
 ├─ SOL/
 ├─ plugins/
 │  ├─ Nexo.solplugin
 │  ├─ HomeAssistant.solplugin
-│  └─ CodexAudioRemote.solplugin
+│  ├─ CodexAudioRemote.solplugin
+│  └─ Bambuddy.solplugin
 ├─ manifest/
 │  └─ sol-full.json
 └─ INSTALL.txt
@@ -95,7 +99,7 @@ Requisitos: Windows PowerShell 7+ y acceso de red a GitHub.
 Salida:
 
 ```text
-dist/SOL-Full-Windows-0.13.0-preview.23.zip
+dist/SOL-Full-Windows-0.13.0-preview.24.zip
 dist/SHA256SUMS.txt
 ```
 

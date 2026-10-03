@@ -23,7 +23,7 @@ jobs:
         run: |
           $manifest = Get-Content -Raw manifest/sol-full.json | ConvertFrom-Json
           if ($manifest.schemaVersion -ne 1) { throw 'Unsupported manifest schemaVersion' }
-          if ($manifest.components.Count -ne 4) { throw 'Expected exactly four pinned components' }
+          if ($manifest.components.Count -ne 5) { throw 'Expected exactly five pinned components' }
           $ids = @($manifest.components | ForEach-Object { $_.id })
           if (($ids | Select-Object -Unique).Count -ne $ids.Count) { throw 'Duplicate component ids' }
           Write-Host "SOL-Full $($manifest.bundle.version): $($ids -join ', ')"
