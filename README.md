@@ -4,13 +4,13 @@ SOL-Full es la distribución Windows probada de **SOL Core + plugins oficiales d
 
 Este repositorio no duplica los árboles fuente de cada proyecto. En cambio, fija artefactos de release conocidos, verifica sus SHA-256, los organiza en un único bundle y ejecuta CI de integración.
 
-## Incluido en `0.13.0-preview.25`
+## Incluido en `0.13.0-preview.26`
 
 | Componente | Versión / tag | Artefacto |
 | --- | --- | --- |
 | SOL Core | `0.15.20` (`43714d6`) / `sol-windows-latest` | `SOL-Core-Windows.zip` |
-| Nexo · WhatsApp | `0.11.2` / `sol-plugin-latest` | `Nexo.solplugin` |
-| Home Assistant | `0.3.40` / `home-assistant-plugin-latest` | `HomeAssistant.solplugin` |
+| Nexo · WhatsApp | `0.11.3` / `sol-plugin-latest` | `Nexo.solplugin` |
+| Home Assistant | `0.3.41` / `home-assistant-plugin-latest` | `HomeAssistant.solplugin` |
 | Codex Audio Remote | `1.5.3` / `sol-plugin-latest` | `CodexAudioRemote.solplugin` |
 | Bambuddy | `0.2.0` / `bambuddy-plugin-latest` | `Bambuddy.solplugin` |
 
@@ -61,7 +61,7 @@ Bambuddy 0.2.0 agrega control LAN/Developer Mode de impresoras Bambu, listado pe
 ## Bundle generado
 
 ```text
-SOL-Full-Windows-0.13.0-preview.25.zip
+SOL-Full-Windows-0.13.0-preview.26.zip
 ├─ SOL/
 ├─ plugins/
 │  ├─ Nexo.solplugin
@@ -99,7 +99,7 @@ Requisitos: Windows PowerShell 7+ y acceso de red a GitHub.
 Salida:
 
 ```text
-dist/SOL-Full-Windows-0.13.0-preview.25.zip
+dist/SOL-Full-Windows-0.13.0-preview.26.zip
 dist/SHA256SUMS.txt
 ```
 
