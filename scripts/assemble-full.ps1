@@ -15,15 +15,20 @@ $MaxPluginPackageBytes = 256 * 1024 * 1024
 $MaxPluginUncompressedBytes = $MaxPluginPackageBytes * 2
 
 function Download-ReleaseAsset([object]$Component, [string]$Destination) {
-  $apiUrl = "https://api.github.com/repos/$($Component.repository)/releases/assets/$($Component.assetId)"
+  # Download by stable release tag + asset name instead of GitHub's numeric
+  # release-asset ID. "latest" releases replace assets in-place and GitHub
+  # assigns a new numeric ID on every replacement, which made otherwise valid
+  # SOL-Full manifests fail with 404 between rebuilds. The pinned SHA-256 below
+  # remains the integrity/source-of-truth check for the downloaded bytes.
+  $tag = [uri]::EscapeDataString([string]$Component.releaseTag)
+  $asset = [uri]::EscapeDataString([string]$Component.asset)
+  $downloadUrl = "https://github.com/$($Component.repository)/releases/download/$tag/$asset"
   $headers = @{
-    Accept = "application/octet-stream"
-    "X-GitHub-Api-Version" = "2022-11-28"
     "User-Agent" = "SOL-Full-Assembler"
   }
 
   Write-Host "Downloading $($Component.asset) from $($Component.repository) release $($Component.releaseTag)"
-  Invoke-WebRequest -Uri $apiUrl -OutFile $Destination -Headers $headers -MaximumRedirection 10
+  Invoke-WebRequest -Uri $downloadUrl -OutFile $Destination -Headers $headers -MaximumRedirection 10
 }
 
 function Assert-Sha256([string]$Path, [string]$Expected) {
