@@ -8,7 +8,7 @@ Este repositorio no duplica los árboles fuente de cada proyecto. En cambio, fij
 
 | Componente | Versión / tag | Artefacto |
 | --- | --- | --- |
-| SOL Core | `0.15.23` (`f72bfbc`) / `sol-windows-latest` | `SOL-Core-Windows.zip` |
+| SOL Core | `0.15.23` (`48a3200`) / `sol-windows-latest` | `SOL-Core-Windows.zip` |
 | Nexo · WhatsApp | `0.11.3` / `sol-plugin-latest` | `Nexo.solplugin` |
 | Home Assistant | `0.3.41` / `home-assistant-plugin-latest` | `HomeAssistant.solplugin` |
 | Codex Audio Remote | `1.5.3` / `sol-plugin-latest` | `CodexAudioRemote.solplugin` |
